@@ -1,0 +1,32 @@
+version: '3.8'
+
+# Development overrides for docker-compose
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - VITE_API_URL=http://localhost:3001
+      - NODE_ENV=development
+    command: npm run dev
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - PORT=3001
+      - FRONTEND_URL=http://localhost:3000
+    command: npm run dev
+
+  model:
+    # Development model service will be configured later
+    command: python -c "print('Model service in development mode')"

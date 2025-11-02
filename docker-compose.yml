@@ -33,21 +33,16 @@ services:
       retries: 3
 
   model:
-    build:
-      context: ./model
-      dockerfile: Dockerfile
+    image: ollama/ollama:latest
     ports:
-      - "8000:8000"
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
     environment:
-      - MODEL_ENV=production
+      - OLLAMA_HOST=0.0.0.0:11434
     networks:
       - app-network
-    # Uncomment when model is implemented
-    # healthcheck:
-    #   test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
-    #   interval: 30s
-    #   timeout: 10s
-    #   retries: 3
+    command: serve
 
 networks:
   app-network:
@@ -55,4 +50,6 @@ networks:
 
 volumes:
   model_data:
+    driver: local
+  ollama_data:
     driver: local

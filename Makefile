@@ -20,6 +20,12 @@ help:
 	@echo "  install  - Install dependencies locally"
 	@echo "  check    - Check if Docker and Docker Compose are installed"
 	@echo ""
+	@echo "Model-specific:"
+	@echo "  model-setup      - Pull and setup Qwen2.5-3B model"
+	@echo "  model-test       - Test the model with sample queries"
+	@echo "  model-chat       - Start interactive chat with model"
+	@echo "  model-list       - List downloaded models"
+	@echo ""
 	@echo "Frontend-specific:"
 	@echo "  frontend-dev     - Start frontend dev server (local)"
 	@echo "  frontend-build   - Build frontend (local)"
@@ -27,10 +33,11 @@ help:
 	@echo "  frontend-lint    - Lint frontend code"
 	@echo ""
 	@echo "Examples:"
-	@echo "  make dev     # Start development"
-	@echo "  make up      # Start production"
-	@echo "  make logs    # View logs"
-	@echo "  make down    # Stop services"
+	@echo "  make dev         # Start development"
+	@echo "  make model-setup # Setup AI model"
+	@echo "  make model-chat  # Chat with model"
+	@echo "  make logs        # View logs"
+	@echo "  make down        # Stop services"
 	@echo ""
 
 # Check if docker and docker-compose are installed
@@ -161,3 +168,20 @@ frontend-lint:
 test-api:
 	@echo "Testing API connectivity..."
 	@curl -f http://localhost:3001/api/health || echo "❌ Backend API not accessible at http://localhost:3001"
+
+# Model commands
+model-setup:
+	@echo "Setting up Qwen2.5-3B model..."
+	@./scripts/setup-model.sh
+
+model-test:
+	@echo "Testing model..."
+	@./scripts/test-model.sh
+
+model-chat:
+	@echo "Starting interactive chat..."
+	@./scripts/interactive-model.sh
+
+model-list:
+	@echo "Listing available models..."
+	@docker exec $$(docker ps --format "{{.Names}}" | grep -E "model[_-]1") ollama list

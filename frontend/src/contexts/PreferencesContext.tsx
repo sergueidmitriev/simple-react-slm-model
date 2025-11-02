@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { Preferences } from '../types/preferences';
 import { loadPreferences, savePreferences } from '../utils/preferences';
+import i18n from '../i18n';
 
 interface PreferencesContextValue {
   preferences: Preferences;
@@ -30,6 +31,11 @@ export const PreferencesProvider = ({ children }: PreferencesProviderProps) => {
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', preferences.theme);
   }, [preferences.theme]);
+
+  // Sync language with i18n whenever it changes
+  useEffect(() => {
+    i18n.changeLanguage(preferences.language);
+  }, [preferences.language]);
 
   /**
    * Update one or more preference values

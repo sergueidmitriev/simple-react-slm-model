@@ -1,12 +1,14 @@
 import { useTranslation } from 'react-i18next';
+import { usePreferences } from '../contexts/PreferencesContext';
+import { Language } from '../types';
 
 const LanguageToggle = () => {
-  const { i18n, t } = useTranslation();
+  const { t } = useTranslation();
+  const { preferences, updatePreferences } = usePreferences();
 
   const toggleLanguage = () => {
-    const newLang = i18n.language === 'en' ? 'fr' : 'en';
-    i18n.changeLanguage(newLang);
-    localStorage.setItem('language', newLang);
+    const newLang = preferences.language === Language.English ? Language.French : Language.English;
+    updatePreferences({ language: newLang });
   };
 
   return (
@@ -18,10 +20,10 @@ const LanguageToggle = () => {
         type="button"
         onClick={toggleLanguage}
         className="language-toggle-button"
-        title={i18n.language === 'en' ? t('language.french') : t('language.english')}
+        title={preferences.language === Language.English ? t('language.french') : t('language.english')}
       >
         <span className="language-toggle-flag">
-          {i18n.language === 'en' ? '🇬🇧' : '🇫🇷'}
+          {preferences.language === Language.English ? '🇬🇧' : '🇫🇷'}
         </span>
       </button>
     </div>

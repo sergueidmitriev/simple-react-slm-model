@@ -9,11 +9,9 @@ import LanguageToggle from './LanguageToggle';
 
 interface ChatHeaderProps {
   isConnected: boolean;
-  isStreaming: boolean;
-  onStreamingToggle: () => void;
 }
 
-const ChatHeader = ({ isConnected, isStreaming, onStreamingToggle }: ChatHeaderProps) => {
+const ChatHeader = ({ isConnected }: ChatHeaderProps) => {
   const { theme } = useTheme();
   const { t } = useTranslation();
   
@@ -42,11 +40,7 @@ const ChatHeader = ({ isConnected, isStreaming, onStreamingToggle }: ChatHeaderP
         <div className="flex items-center space-x-4">
           <div className="flex flex-col gap-2">
             <ThemeToggle />
-            <StreamingToggle 
-              isStreaming={isStreaming}
-              onToggle={onStreamingToggle}
-              disabled={!isConnected}
-            />
+            <StreamingToggle disabled={!isConnected} />
           </div>
           <div className="flex flex-col gap-2 items-end">
             <ConnectionStatus isConnected={isConnected} />

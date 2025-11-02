@@ -10,11 +10,9 @@ interface MessageInputProps {
   isLoading: boolean;
   isCancelled: boolean;
   isConnected: boolean;
-  isStreaming: boolean;
   onChange: (value: string) => void;
   onSubmit: (e: React.FormEvent) => void;
   onCancel: () => void;
-  onStreamingToggle: () => void;
 }
 
 const MessageInput = ({

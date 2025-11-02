@@ -1,20 +1,20 @@
 import { useTranslation } from 'react-i18next';
+import { usePreferences } from '../contexts/PreferencesContext';
 
 interface StreamingToggleProps {
-  isStreaming: boolean;
-  onToggle: () => void;
   disabled?: boolean;
 }
 
 /**
  * Toggle button for enabling/disabling streaming mode
  */
-export const StreamingToggle: React.FC<StreamingToggleProps> = ({
-  isStreaming,
-  onToggle,
-  disabled = false,
-}) => {
+export function StreamingToggle({ disabled = false }: StreamingToggleProps) {
   const { t } = useTranslation();
+  const { preferences, updatePreferences } = usePreferences();
+
+  const toggleStreaming = () => {
+    updatePreferences({ streaming: !preferences.streaming });
+  };
 
   return (
     <div className="toggle-switch-container">
@@ -23,20 +23,20 @@ export const StreamingToggle: React.FC<StreamingToggleProps> = ({
         <span className="toggle-label-left">{t('chat.streaming.complete')}</span>
         <button
           type="button"
-          onClick={onToggle}
+          onClick={toggleStreaming}
           disabled={disabled}
           className="streaming-toggle-button"
           aria-label={t('chat.streaming.toggle')}
           title={
-            isStreaming
+            preferences.streaming
               ? t('chat.streaming.disableTooltip')
               : t('chat.streaming.enableTooltip')
           }
         >
-          <span className={`streaming-toggle-slider ${isStreaming ? 'active' : ''}`} />
+          <span className={`streaming-toggle-slider ${preferences.streaming ? 'active' : ''}`} />
         </button>
         <span className="toggle-label-right">{t('chat.streaming.streaming')}</span>
       </div>
     </div>
   );
-};
+}

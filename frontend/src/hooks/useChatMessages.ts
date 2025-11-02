@@ -3,16 +3,15 @@ import { useTranslation } from 'react-i18next';
 import { Message } from '../types';
 import { chatService } from '../services/api';
 import { generateMessageId, MESSAGE_ID_OFFSET } from '../utils/messageId';
+import { usePreferences } from '../contexts/PreferencesContext';
 
 interface UseChatMessagesReturn {
   messages: Message[];
   inputValue: string;
   isLoading: boolean;
   isCancelled: boolean;
-  isStreaming: boolean;
   inputRef: React.RefObject<HTMLInputElement>;
   setInputValue: (value: string) => void;
-  setIsStreaming: (value: boolean) => void;
   handleSubmit: (e: React.FormEvent) => Promise<void>;
   handleCancel: () => void;
 }
@@ -27,7 +26,7 @@ export const useChatMessages = (isConnected: boolean): UseChatMessagesReturn => 
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isCancelled, setIsCancelled] = useState(false);
-  const [isStreaming, setIsStreaming] = useState(false);
+  const { preferences } = usePreferences();
   const { t, i18n } = useTranslation();
   const abortControllerRef = useRef<AbortController | null>(null);
   const streamingMessageIdRef = useRef<string | null>(null);
@@ -76,7 +75,7 @@ export const useChatMessages = (isConnected: boolean): UseChatMessagesReturn => 
     setIsLoading(true);
 
     try {
-      if (isStreaming) {
+      if (preferences.streaming) {
         // Streaming mode
         const assistantMessageId = generateMessageId(MESSAGE_ID_OFFSET.ASSISTANT);
         streamingMessageIdRef.current = assistantMessageId;
@@ -154,17 +153,15 @@ export const useChatMessages = (isConnected: boolean): UseChatMessagesReturn => 
         }, 100);
       }
     }
-  }, [inputValue, isLoading, isConnected, isStreaming, t, i18n.language]);
+  }, [inputValue, isLoading, isConnected, preferences.streaming, t, i18n.language]);
 
   return {
     messages,
     inputValue,
     isLoading,
     isCancelled,
-    isStreaming,
     inputRef,
     setInputValue,
-    setIsStreaming,
     handleSubmit,
     handleCancel,
   };

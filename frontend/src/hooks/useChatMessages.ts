@@ -57,9 +57,14 @@ export const useChatMessages = (isConnected: boolean): UseChatMessagesReturn => 
       );
       
       if (!abortControllerRef.current.signal.aborted) {
+        // Use type guard to safely access message
+        const messageContent = response.success 
+          ? response.message 
+          : response.error || t('errors.genericError');
+
         const assistantMessage: Message = {
           id: generateMessageId(MESSAGE_ID_OFFSET.ASSISTANT),
-          content: response.message,
+          content: messageContent,
           role: 'assistant',
           timestamp: new Date(),
         };

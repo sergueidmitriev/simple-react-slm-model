@@ -42,7 +42,14 @@ export const chatService = {
   sendMessage: async (message: string, signal?: AbortSignal): Promise<ChatResponse> => {
     try {
       const response = await api.post(API_ENDPOINTS.CHAT, { message }, { signal });
-      return response.data;
+      const data = response.data as ChatResponse;
+      
+      // Validate response structure
+      if (!data || typeof data.success !== 'boolean') {
+        throw new Error('Invalid response format from API');
+      }
+      
+      return data;
     } catch (error) {
       // Don't log errors for aborted requests
       if (signal?.aborted) {

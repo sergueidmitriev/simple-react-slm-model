@@ -6,6 +6,7 @@ export interface Message {
 }
 
 export { Theme } from './theme';
+export { ApiError, ErrorType } from './errors';
 
 export interface ChatResponse {
   message: string;

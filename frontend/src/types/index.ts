@@ -5,6 +5,8 @@ export interface Message {
   timestamp: Date;
 }
 
+export { Theme } from './theme';
+
 export interface ChatResponse {
   message: string;
   success: boolean;

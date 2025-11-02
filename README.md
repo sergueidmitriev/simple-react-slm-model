@@ -1,6 +1,6 @@
 # Simple project with React + SLM Model
 
-A production-ready React application with bilingual chat interface powered by Qwen2.5-3B language model via Ollama.
+A proof-of-concept React application demonstrating clean architecture patterns with a bilingual chat interface powered by Qwen2.5-3B language model via Ollama.
 
 ![Light Theme](./docs/assets/chat-light.png)
 *Light Theme - Clean, modern interface*
@@ -8,39 +8,12 @@ A production-ready React application with bilingual chat interface powered by Qw
 ![Terminal Theme](./docs/assets/chat-terminal.png)
 *Terminal Theme - Retro computer aesthetic*
 
-## Project Structure
-
-```
-simple-react-slm-model/
-├── frontend/                 # React/TypeScript web app
-│   ├── src/
-│   │   ├── components/       # UI components (Chat, Message)
-│   │   ├── services/         # API communication
-│   │   ├── types/           # TypeScript definitions
-│   │   └── App.tsx
-│   ├── Dockerfile           # Production build
-│   ├── Dockerfile.dev       # Development build
-│   └── nginx.conf           # Nginx configuration
-├── backend/                 # Node.js/Express API server
-│   ├── src/
-│   │   ├── routes/          # API endpoints
-│   │   ├── services/        # Business logic (ModelService)
-│   │   └── server.ts
-│   ├── Dockerfile           # Production build
-│   └── Dockerfile.dev       # Development build
-├── model/                   # SLM model service (placeholder)
-│   └── Dockerfile           # Model service container
-├── docker-compose.yml       # Production orchestration
-├── docker-compose.dev.yml   # Development overrides
-└── Makefile                # Build and development commands
-```
-
 ## Tech Stack
 
 - **Frontend**: React 18, TypeScript, Vite, Tailwind CSS
-- **Backend**: Node.js, Express, TypeScript, CORS, Helmet
-- **Infrastructure**: Docker, Docker Compose, Nginx
-- **Model**: Ollama with Qwen2.5-3B (bilingual EN/FR)
+- **Backend**: Node.js 22, Express, TypeScript (OOP + DI)
+- **AI Model**: Ollama with Qwen2.5-3B (bilingual EN/FR)
+- **Infrastructure**: Docker Compose, Nginx
 
 ## 🚀 Getting Started
 

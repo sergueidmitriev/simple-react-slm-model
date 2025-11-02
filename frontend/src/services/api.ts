@@ -39,31 +39,41 @@ api.interceptors.response.use(
 );
 
 export const chatService = {
-  sendMessage: async (message: string): Promise<ChatResponse> => {
+  sendMessage: async (message: string, signal?: AbortSignal): Promise<ChatResponse> => {
     try {
-      const response = await api.post(API_ENDPOINTS.CHAT, { message });
+      const response = await api.post(API_ENDPOINTS.CHAT, { message }, { signal });
       return response.data;
     } catch (error) {
+      // Don't log errors for aborted requests
+      if (signal?.aborted) {
+        throw error;
+      }
       const apiError = createApiError(error);
       console.error('Error sending message:', apiError);
       throw apiError;
     }
   },
 
-  health: async (): Promise<{ status: string }> => {
+  health: async (signal?: AbortSignal): Promise<{ status: string }> => {
     try {
       const response = await retry(
-        () => api.get(API_ENDPOINTS.HEALTH),
+        () => api.get(API_ENDPOINTS.HEALTH, { signal }),
         {
           maxAttempts: 3,
           delayMs: 1000,
           onRetry: (attempt, error) => {
-            console.log(`Health check attempt ${attempt} failed:`, error.message);
+            if (!signal?.aborted) {
+              console.log(`Health check attempt ${attempt} failed:`, error.message);
+            }
           },
         }
       );
       return response.data;
     } catch (error) {
+      // Don't log errors for aborted requests
+      if (signal?.aborted) {
+        throw error;
+      }
       const apiError = createApiError(error);
       console.error('Health check failed:', apiError);
       throw apiError;

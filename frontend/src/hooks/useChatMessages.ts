@@ -21,7 +21,7 @@ export const useChatMessages = (isConnected: boolean): UseChatMessagesReturn => 
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const abortControllerRef = useRef<AbortController | null>(null);
 
   // Cleanup on unmount
@@ -53,6 +53,7 @@ export const useChatMessages = (isConnected: boolean): UseChatMessagesReturn => 
     try {
       const response = await chatService.sendMessage(
         userMessage.content,
+        i18n.language, // Pass current language to backend
         abortControllerRef.current.signal
       );
       
@@ -86,7 +87,7 @@ export const useChatMessages = (isConnected: boolean): UseChatMessagesReturn => 
         setIsLoading(false);
       }
     }
-  }, [inputValue, isLoading, isConnected, t]);
+  }, [inputValue, isLoading, isConnected, t, i18n.language]);
 
   return {
     messages,

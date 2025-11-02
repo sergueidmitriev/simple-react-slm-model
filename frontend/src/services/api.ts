@@ -39,9 +39,13 @@ api.interceptors.response.use(
 );
 
 export const chatService = {
-  sendMessage: async (message: string, signal?: AbortSignal): Promise<ChatResponse> => {
+  sendMessage: async (message: string, language?: string, signal?: AbortSignal): Promise<ChatResponse> => {
     try {
-      const response = await api.post(API_ENDPOINTS.CHAT, { message }, { signal });
+      const response = await api.post(
+        API_ENDPOINTS.CHAT, 
+        { message, language }, 
+        { signal }
+      );
       const data = response.data as ChatResponse;
       
       // Validate response structure

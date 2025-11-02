@@ -29,5 +29,15 @@ services:
     command: npm run dev
 
   model:
-    # Development model service will be configured later
-    command: python -c "print('Model service in development mode')"
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+    environment:
+      - OLLAMA_HOST=0.0.0.0:11434
+    command: serve
+
+volumes:
+  ollama_data:
+    driver: local

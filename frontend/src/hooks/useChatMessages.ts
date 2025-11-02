@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Message } from '../types';
 import { chatService } from '../services/api';
+import { generateMessageId, MESSAGE_ID_OFFSET } from '../utils/messageId';
 
 interface UseChatMessagesReturn {
   messages: Message[];
@@ -27,7 +28,7 @@ export const useChatMessages = (isConnected: boolean): UseChatMessagesReturn => 
     if (!inputValue.trim() || isLoading || !isConnected) return;
 
     const userMessage: Message = {
-      id: Date.now().toString(),
+      id: generateMessageId(MESSAGE_ID_OFFSET.USER),
       content: inputValue.trim(),
       role: 'user',
       timestamp: new Date(),
@@ -41,7 +42,7 @@ export const useChatMessages = (isConnected: boolean): UseChatMessagesReturn => 
       const response = await chatService.sendMessage(userMessage.content);
       
       const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
+        id: generateMessageId(MESSAGE_ID_OFFSET.ASSISTANT),
         content: response.message,
         role: 'assistant',
         timestamp: new Date(),
@@ -50,7 +51,7 @@ export const useChatMessages = (isConnected: boolean): UseChatMessagesReturn => 
       setMessages(prev => [...prev, assistantMessage]);
     } catch (error) {
       const errorMessage: Message = {
-        id: (Date.now() + 1).toString(),
+        id: generateMessageId(MESSAGE_ID_OFFSET.ERROR),
         content: t('errors.genericError'),
         role: 'assistant',
         timestamp: new Date(),

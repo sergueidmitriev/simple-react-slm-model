@@ -1,5 +1,9 @@
 # Model Setup Guide
 
+**← [Back to README](../README.md)** | **[Integration Guide →](./INTEGRATION.md)**
+
+---
+
 ## Qwen2.5-3B with Ollama
 
 This project uses **Qwen2.5-3B-Instruct** - a small, bilingual (English/French) language model running via Ollama.
@@ -221,3 +225,7 @@ Update the model name in your backend code accordingly.
 - [Qwen2.5 Model Card](https://huggingface.co/Qwen/Qwen2.5-3B-Instruct)
 - [Ollama API Reference](https://github.com/ollama/ollama/blob/main/docs/api.md)
 - [Available Models](https://ollama.com/library)
+
+---
+
+**← [Back to README](../README.md)** | **[Integration Guide →](./INTEGRATION.md)** | **[Theme Architecture →](./THEME_ARCHITECTURE.md)**

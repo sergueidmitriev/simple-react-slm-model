@@ -1,6 +1,12 @@
 # Simple React SLM Model
 
-A React/TypeScript web application for interacting with Small Language Models, running in Docker containers.
+A production-ready React application with bilingual chat interface powered by Qwen2.5-3B language model via Ollama.
+
+![Light Theme](./docs/assets/chat-light.png)
+*Light Theme - Clean, modern interface*
+
+![Terminal Theme](./docs/assets/chat-terminal.png)
+*Terminal Theme - Retro computer aesthetic*
 
 ## Project Structure
 

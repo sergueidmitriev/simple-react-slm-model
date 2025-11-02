@@ -1,7 +1,13 @@
 # Theme Architecture Documentation
 
 ## Overview
-This document describes the theme system architecture implemented in the Simple React SLM Model application. The system provides a clean separation of concerns between styling and component logic.
+# Theme Architecture
+
+**← [Back to README](../README.md)** | **[Model Setup →](../MODEL_SETUP.md)** | **[Integration Guide →](../INTEGRATION.md)**
+
+---
+
+This document describes the theme system implementation in the Simple React SLM Model application. The system provides a clean separation of concerns between styling and component logic.
 
 ## Architecture Pattern: Theme Context + CSS Variables
 

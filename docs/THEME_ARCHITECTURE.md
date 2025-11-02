@@ -219,7 +219,7 @@ export enum Theme {
 ## Testing
 
 To test themes:
-1. Open http://localhost:3002
+1. Open http://localhost:3002 (development) or http://localhost:3000 (production)
 2. Click the "Switch style" toggle
 3. Verify both themes render correctly
 4. Refresh the page - theme should persist

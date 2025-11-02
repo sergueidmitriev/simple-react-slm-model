@@ -130,6 +130,7 @@ body {
   width: 100%;
   max-width: 42rem;
   min-height: 600px;
+  max-height: 90vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -148,6 +149,10 @@ body {
 
 .chat-header {
   padding: 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  flex-shrink: 0;
 }
 
 [data-theme="modern"] .chat-header {
@@ -239,6 +244,10 @@ body {
 .message-input-container {
   padding: 1.5rem;
   background-color: var(--color-bg-secondary);
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  flex-shrink: 0;
 }
 
 [data-theme="modern"] .message-input-container {
@@ -423,6 +432,7 @@ body {
   cursor: pointer;
   border: none;
   outline: none;
+  flex-shrink: 0;
 }
 
 [data-theme="modern"] .theme-toggle-button {
@@ -444,16 +454,22 @@ body {
   width: 1rem;
   transform: translateX(0.25rem);
   border-radius: 9999px;
-  background-color: white;
   transition: transform 0.2s;
+}
+
+.theme-toggle-slider.active {
+  transform: translateX(1.5rem);
 }
 
 [data-theme="modern"] .theme-toggle-slider {
   background-color: white;
 }
 
+[data-theme="modern"] .theme-toggle-button:has(.theme-toggle-slider.active) {
+  background-color: #22c55e;
+}
+
 [data-theme="terminal"] .theme-toggle-slider {
-  transform: translateX(1.5rem);
   background-color: #000000;
 }
 
@@ -755,3 +771,147 @@ body {
   font-family: var(--font-mono);
   box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
 }
+
+/* Streaming Toggle (styled like theme toggle) */
+.streaming-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.streaming-toggle .text-xs {
+  font-size: 0.75rem;
+  min-width: 5.5rem;
+  text-align: right;
+}
+
+[data-theme="modern"] .streaming-toggle .text-xs {
+  color: white;
+}
+
+[data-theme="terminal"] .streaming-toggle .text-xs {
+  color: #22c55e;
+  font-family: var(--font-mono);
+}
+
+/* Toggle Switch Container (for both theme and streaming) */
+.toggle-switch-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.toggle-title {
+  font-size: 0.75rem;
+  font-weight: 500;
+  min-width: 4rem;
+}
+
+[data-theme="modern"] .toggle-title {
+  color: white;
+}
+
+[data-theme="terminal"] .toggle-title {
+  color: #22c55e;
+  font-family: var(--font-mono);
+}
+
+.toggle-switch-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.toggle-label-left,
+.toggle-label-right {
+  font-size: 0.75rem;
+  min-width: 3.5rem;
+  white-space: nowrap;
+}
+
+.toggle-label-left {
+  text-align: right;
+}
+
+.toggle-label-right {
+  text-align: left;
+}
+
+[data-theme="modern"] .toggle-label-left,
+[data-theme="modern"] .toggle-label-right {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+[data-theme="terminal"] .toggle-label-left,
+[data-theme="terminal"] .toggle-label-right {
+  color: #4ade80;
+  font-family: var(--font-mono);
+}
+
+.streaming-toggle-button {
+  position: relative;
+  display: inline-flex;
+  height: 1.5rem;
+  width: 2.75rem;
+  align-items: center;
+  border-radius: 9999px;
+  transition: all 0.2s;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  flex-shrink: 0;
+}
+
+.streaming-toggle-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+[data-theme="modern"] .streaming-toggle-button {
+  background-color: #9ca3af;
+}
+
+[data-theme="terminal"] .streaming-toggle-button {
+  background-color: #065f46;
+  border: 2px solid #16a34a;
+}
+
+.streaming-toggle-button:focus {
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+.streaming-toggle-slider {
+  display: inline-block;
+  height: 1rem;
+  width: 1rem;
+  transform: translateX(0.25rem);
+  border-radius: 9999px;
+  background-color: white;
+  transition: transform 0.2s;
+}
+
+[data-theme="modern"] .streaming-toggle-slider {
+  background-color: white;
+}
+
+[data-theme="modern"] .streaming-toggle-slider.active {
+  transform: translateX(1.5rem);
+}
+
+[data-theme="modern"] .streaming-toggle-button:has(.streaming-toggle-slider.active) {
+  background-color: #60a5fa;
+}
+
+[data-theme="terminal"] .streaming-toggle-slider {
+  background-color: #000000;
+}
+
+[data-theme="terminal"] .streaming-toggle-slider.active {
+  transform: translateX(1.5rem);
+}
+
+[data-theme="terminal"] .streaming-toggle-button:has(.streaming-toggle-slider.active) {
+  background-color: #22c55e;
+  border-color: #22c55e;
+}
+

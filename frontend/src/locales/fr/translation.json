@@ -6,7 +6,10 @@
     "subtitleTerminal": "SYSTÈME v1.0.0 PRÊT"
   },
   "theme": {
-    "switchStyle": "Changer de style"
+    "switchStyle": "Changer de style",
+    "title": "Thème",
+    "modern": "Moderne",
+    "terminal": "Terminal"
   },
   "status": {
     "online": "En ligne",
@@ -30,7 +33,17 @@
     "requestCancelled": "Requête annulée",
     "requestCancelledTerminal": "REQUÊTE_ANNULÉE",
     "aiTyping": "L'IA tape...",
-    "aiTypingTerminal": "TRAITEMENT..."
+    "aiTypingTerminal": "TRAITEMENT...",
+    "streaming": {
+      "toggle": "Activer/désactiver le mode streaming",
+      "title": "Réponse",
+      "complete": "Complète",
+      "streaming": "Streaming",
+      "on": "Streaming",
+      "off": "Normal",
+      "enableTooltip": "Activer le mode streaming pour des réponses en temps réel",
+      "disableTooltip": "Désactiver le mode streaming pour des réponses complètes"
+    }
   },
   "errors": {
     "connectionLost": "Connexion perdue. Veuillez vérifier votre réseau et réessayer.",

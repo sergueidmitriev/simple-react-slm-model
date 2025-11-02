@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Message } from '../types';
 import { chatService } from '../services/api';
@@ -31,7 +31,7 @@ export const useChatMessages = (isConnected: boolean): UseChatMessagesReturn => 
     };
   }, []);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputValue.trim() || isLoading || !isConnected) return;
 
@@ -86,7 +86,7 @@ export const useChatMessages = (isConnected: boolean): UseChatMessagesReturn => 
         setIsLoading(false);
       }
     }
-  };
+  }, [inputValue, isLoading, isConnected, t]);
 
   return {
     messages,

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../contexts/ThemeContext';
 import { Theme } from '../types';
@@ -21,13 +21,25 @@ const MessageInput: React.FC<MessageInputProps> = ({
   const { t } = useTranslation();
   const { theme } = useTheme();
 
-  const placeholder = theme === Theme.Terminal ? t('chat.inputPlaceholderTerminal') : t('chat.inputPlaceholder');
-  const buttonText = theme === Theme.Terminal 
-    ? t('chat.sendButtonTerminal')
-    : (isLoading ? t('chat.sending') : t('chat.sendButton'));
-  const errorMessage = theme === Theme.Terminal 
-    ? t('errors.connectionLostTerminal')
-    : t('errors.connectionLost');
+  // Memoize computed strings to prevent recalculation
+  const placeholder = useMemo(
+    () => theme === Theme.Terminal ? t('chat.inputPlaceholderTerminal') : t('chat.inputPlaceholder'),
+    [theme, t]
+  );
+
+  const buttonText = useMemo(
+    () => theme === Theme.Terminal 
+      ? t('chat.sendButtonTerminal')
+      : (isLoading ? t('chat.sending') : t('chat.sendButton')),
+    [theme, isLoading, t]
+  );
+
+  const errorMessage = useMemo(
+    () => theme === Theme.Terminal 
+      ? t('errors.connectionLostTerminal')
+      : t('errors.connectionLost'),
+    [theme, t]
+  );
 
   return (
     <div className="message-input-container">

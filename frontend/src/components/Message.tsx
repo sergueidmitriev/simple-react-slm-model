@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Message } from '../types';
 
 interface MessageProps {
   message: Message;
 }
 
-const MessageComponent: React.FC<MessageProps> = ({ message }) => {
+const MessageComponent: React.FC<MessageProps> = memo(({ message }) => {
   const isUser = message.role === 'user';
 
   return (
@@ -23,6 +23,8 @@ const MessageComponent: React.FC<MessageProps> = ({ message }) => {
       </div>
     </div>
   );
-};
+});
+
+MessageComponent.displayName = 'MessageComponent';
 
 export default MessageComponent;

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../contexts/ThemeContext';
 import { Theme } from '../types';
@@ -14,8 +14,16 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ isConnected }) => {
   const { theme } = useTheme();
   const { t } = useTranslation();
   
-  const title = theme === Theme.Terminal ? t('header.titleTerminal') : t('header.title');
-  const subtitle = theme === Theme.Terminal ? t('header.subtitleTerminal') : t('header.subtitle');
+  // Memoize title and subtitle to prevent recalculation
+  const title = useMemo(
+    () => theme === Theme.Terminal ? t('header.titleTerminal') : t('header.title'),
+    [theme, t]
+  );
+
+  const subtitle = useMemo(
+    () => theme === Theme.Terminal ? t('header.subtitleTerminal') : t('header.subtitle'),
+    [theme, t]
+  );
 
   return (
     <div className="chat-header">

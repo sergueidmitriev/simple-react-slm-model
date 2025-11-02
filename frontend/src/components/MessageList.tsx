@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../contexts/ThemeContext';
 import { Theme } from '../types';
@@ -23,9 +23,21 @@ const MessageList: React.FC<MessageListProps> = ({ messages, isLoading }) => {
     scrollToBottom();
   }, [messages]);
 
-  const emptyTitle = theme === Theme.Terminal ? t('chat.emptyTitleTerminal') : t('chat.emptyTitle');
-  const emptySubtitle = theme === Theme.Terminal ? t('chat.emptySubtitleTerminal') : t('chat.emptySubtitle');
-  const loadingText = theme === Theme.Terminal ? t('chat.aiTypingTerminal') : t('chat.aiTyping');
+  // Memoize computed values to prevent recalculation on every render
+  const emptyTitle = useMemo(
+    () => theme === Theme.Terminal ? t('chat.emptyTitleTerminal') : t('chat.emptyTitle'),
+    [theme, t]
+  );
+
+  const emptySubtitle = useMemo(
+    () => theme === Theme.Terminal ? t('chat.emptySubtitleTerminal') : t('chat.emptySubtitle'),
+    [theme, t]
+  );
+
+  const loadingText = useMemo(
+    () => theme === Theme.Terminal ? t('chat.aiTypingTerminal') : t('chat.aiTyping'),
+    [theme, t]
+  );
 
   return (
     <div className="message-list">

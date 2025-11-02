@@ -1,4 +1,4 @@
-# Simple React SLM Model
+# Simple project with React + SLM Model
 
 A production-ready React application with bilingual chat interface powered by Qwen2.5-3B language model via Ollama.
 
@@ -40,7 +40,124 @@ simple-react-slm-model/
 - **Frontend**: React 18, TypeScript, Vite, Tailwind CSS
 - **Backend**: Node.js, Express, TypeScript, CORS, Helmet
 - **Infrastructure**: Docker, Docker Compose, Nginx
-- **Model**: Python-based (to be implemented)
+- **Model**: Ollama with Qwen2.5-3B (bilingual EN/FR)
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- **Docker & Docker Compose** - [Install Docker](https://docs.docker.com/get-docker/)
+- **Git** - For cloning the repository
+- **4GB+ RAM** - Required for running the AI model
+- **3GB+ disk space** - For Docker images and model
+
+### Quick Start (5 minutes)
+
+**1. Clone the repository:**
+```bash
+git clone https://github.com/sergueidmitriev/simple-react-slm-model.git
+cd simple-react-slm-model
+```
+
+**2. Start all services:**
+```bash
+make dev
+```
+
+This command will:
+- Start frontend (React) on http://localhost:3002
+- Start backend (Express) on http://localhost:3001
+- Start Ollama (AI model service) on http://localhost:11434
+
+**3. Setup the AI model (one-time, ~1.8GB download):**
+
+Open a new terminal and run:
+```bash
+make model-setup
+```
+
+Wait ~5 minutes for the model to download. You'll see:
+```
+✅ Model downloaded successfully!
+```
+
+**4. Open the app:**
+
+Visit http://localhost:3002 and start chatting! 🎉
+
+### Testing It Works
+
+**Send a test message:**
+- Type: "What is React?"
+- You should get a response from the AI model
+
+**Try bilingual support:**
+- Click the language toggle (EN ⟷ FR)
+- Type: "Qu'est-ce que Docker?"
+- The model responds in French!
+
+**Try themes:**
+- Click the theme toggle to switch between Light/Dark/Terminal themes
+
+### Troubleshooting
+
+**Services not starting?**
+```bash
+# Stop everything
+make down
+
+# Start fresh
+make dev
+```
+
+**Model not responding?**
+```bash
+# Check if model is downloaded
+make model-list
+
+# If empty, run setup again
+make model-setup
+```
+
+**Port already in use?**
+```bash
+# Check what's using the ports
+sudo lsof -i :3002  # Frontend
+sudo lsof -i :3001  # Backend
+sudo lsof -i :11434 # Ollama
+
+# Stop conflicting service or change ports in docker-compose.dev.yml
+```
+
+**Backend can't connect to model?**
+```bash
+# Check all containers are running
+docker ps
+
+# Restart backend
+docker-compose restart backend
+```
+
+**Something's broken?**
+```bash
+# Nuclear option - clean everything and start over
+make down
+make clean
+make dev
+make model-setup
+```
+
+### Stopping the Application
+
+```bash
+# Stop all services (preserves data)
+make down
+
+# Stop and remove everything including volumes
+make clean
+```
+
+---
 
 ## Quick Start
 
@@ -80,7 +197,9 @@ docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
 # Model service: http://localhost:8000 (placeholder)
 ```
 
-## Development
+---
+
+## 🛠️ Development
 
 ### Prerequisites
 

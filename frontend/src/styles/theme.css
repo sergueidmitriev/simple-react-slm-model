@@ -337,6 +337,8 @@ body {
 
 .theme-toggle .text-xs {
   font-size: 0.75rem;
+  min-width: 5.5rem;
+  text-align: right;
 }
 
 [data-theme="modern"] .theme-toggle .text-xs {
@@ -357,6 +359,8 @@ body {
 
 .language-toggle .text-xs {
   font-size: 0.75rem;
+  min-width: 4rem;
+  text-align: right;
 }
 
 [data-theme="modern"] .language-toggle .text-xs {
@@ -427,6 +431,7 @@ body {
 
 [data-theme="terminal"] .theme-toggle-button {
   background-color: #22c55e;
+  border: 2px solid #22c55e;
 }
 
 .theme-toggle-button:focus {
@@ -443,8 +448,13 @@ body {
   transition: transform 0.2s;
 }
 
+[data-theme="modern"] .theme-toggle-slider {
+  background-color: white;
+}
+
 [data-theme="terminal"] .theme-toggle-slider {
   transform: translateX(1.5rem);
+  background-color: #000000;
 }
 
 .status-indicator {

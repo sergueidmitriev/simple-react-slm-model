@@ -11,6 +11,15 @@ export interface IModelService {
   generateResponse(message: string, language?: string): Promise<string>;
 
   /**
+   * Generate a streaming response from the model
+   * Returns a ReadableStream that yields response chunks
+   * @param message - User's message
+   * @param language - Optional language hint (en, fr, etc.)
+   * @returns ReadableStream of response chunks
+   */
+  generateResponseStream(message: string, language?: string): Promise<ReadableStream<string>>;
+
+  /**
    * Check if the model service is healthy and ready
    * @returns True if healthy, false otherwise
    */

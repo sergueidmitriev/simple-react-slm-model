@@ -9,7 +9,9 @@ interface UseChatMessagesReturn {
   inputValue: string;
   isLoading: boolean;
   isCancelled: boolean;
+  isStreaming: boolean;
   setInputValue: (value: string) => void;
+  setIsStreaming: (value: boolean) => void;
   handleSubmit: (e: React.FormEvent) => Promise<void>;
   handleCancel: () => void;
 }
@@ -24,8 +26,10 @@ export const useChatMessages = (isConnected: boolean): UseChatMessagesReturn => 
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isCancelled, setIsCancelled] = useState(false);
+  const [isStreaming, setIsStreaming] = useState(false);
   const { t, i18n } = useTranslation();
   const abortControllerRef = useRef<AbortController | null>(null);
+  const streamingMessageIdRef = useRef<string | null>(null);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -70,26 +74,63 @@ export const useChatMessages = (isConnected: boolean): UseChatMessagesReturn => 
     setIsLoading(true);
 
     try {
-      const response = await chatService.sendMessage(
-        userMessage.content,
-        i18n.language, // Pass current language to backend
-        abortControllerRef.current.signal
-      );
-      
-      if (!abortControllerRef.current.signal.aborted) {
-        // Use type guard to safely access message
-        const messageContent = response.success 
-          ? response.message 
-          : response.error || t('errors.genericError');
-
+      if (isStreaming) {
+        // Streaming mode
+        const assistantMessageId = generateMessageId(MESSAGE_ID_OFFSET.ASSISTANT);
+        streamingMessageIdRef.current = assistantMessageId;
+        
+        // Add empty assistant message that will be updated with chunks
         const assistantMessage: Message = {
-          id: generateMessageId(MESSAGE_ID_OFFSET.ASSISTANT),
-          content: messageContent,
+          id: assistantMessageId,
+          content: '',
           role: 'assistant',
           timestamp: new Date(),
         };
-
         setMessages(prev => [...prev, assistantMessage]);
+
+        let accumulatedContent = '';
+        
+        await chatService.streamMessage(
+          userMessage.content,
+          i18n.language,
+          (chunk: string) => {
+            if (!abortControllerRef.current?.signal.aborted) {
+              accumulatedContent += chunk;
+              setMessages(prev => 
+                prev.map(msg => 
+                  msg.id === assistantMessageId 
+                    ? { ...msg, content: accumulatedContent }
+                    : msg
+                )
+              );
+            }
+          },
+          abortControllerRef.current.signal
+        );
+        
+        streamingMessageIdRef.current = null;
+      } else {
+        // Non-streaming mode (original)
+        const response = await chatService.sendMessage(
+          userMessage.content,
+          i18n.language,
+          abortControllerRef.current.signal
+        );
+        
+        if (!abortControllerRef.current.signal.aborted) {
+          const messageContent = response.success 
+            ? response.message 
+            : response.error || t('errors.genericError');
+
+          const assistantMessage: Message = {
+            id: generateMessageId(MESSAGE_ID_OFFSET.ASSISTANT),
+            content: messageContent,
+            role: 'assistant',
+            timestamp: new Date(),
+          };
+
+          setMessages(prev => [...prev, assistantMessage]);
+        }
       }
     } catch (error) {
       if (!abortControllerRef.current.signal.aborted) {
@@ -104,16 +145,19 @@ export const useChatMessages = (isConnected: boolean): UseChatMessagesReturn => 
     } finally {
       if (!abortControllerRef.current.signal.aborted) {
         setIsLoading(false);
+        streamingMessageIdRef.current = null;
       }
     }
-  }, [inputValue, isLoading, isConnected, t, i18n.language]);
+  }, [inputValue, isLoading, isConnected, isStreaming, t, i18n.language]);
 
   return {
     messages,
     inputValue,
     isLoading,
     isCancelled,
+    isStreaming,
     setInputValue,
+    setIsStreaming,
     handleSubmit,
     handleCancel,
   };

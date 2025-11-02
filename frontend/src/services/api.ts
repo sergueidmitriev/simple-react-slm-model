@@ -65,6 +65,82 @@ export const chatService = {
     }
   },
 
+  streamMessage: async (
+    message: string, 
+    language?: string, 
+    onChunk?: (chunk: string) => void,
+    signal?: AbortSignal
+  ): Promise<void> => {
+    try {
+      const url = `${API_BASE_URL}${API_ENDPOINTS.CHAT}/stream`;
+      
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message, language }),
+        signal,
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const reader = response.body?.getReader();
+      if (!reader) {
+        throw new Error('Response body is null');
+      }
+
+      const decoder = new TextDecoder();
+      let buffer = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        
+        if (done) {
+          break;
+        }
+
+        // Decode and add to buffer
+        buffer += decoder.decode(value, { stream: true });
+        
+        // Process complete SSE messages
+        const lines = buffer.split('\n');
+        buffer = lines.pop() || ''; // Keep incomplete line in buffer
+
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            const data = line.slice(6); // Remove 'data: ' prefix
+            
+            if (data === '[DONE]') {
+              return;
+            }
+
+            try {
+              const parsed = JSON.parse(data);
+              if (parsed.chunk && onChunk) {
+                onChunk(parsed.chunk);
+              } else if (parsed.error) {
+                throw new Error(parsed.error);
+              }
+            } catch (parseError) {
+              console.warn('Failed to parse SSE data:', parseError);
+            }
+          }
+        }
+      }
+    } catch (error) {
+      // Don't log errors for aborted requests
+      if (signal?.aborted) {
+        throw error;
+      }
+      const apiError = createApiError(error);
+      console.error('Error streaming message:', apiError);
+      throw apiError;
+    }
+  },
+
   health: async (signal?: AbortSignal): Promise<{ status: string }> => {
     try {
       const response = await retry(

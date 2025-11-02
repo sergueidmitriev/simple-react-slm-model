@@ -30,7 +30,14 @@
     "requestCancelled": "Requête annulée",
     "requestCancelledTerminal": "REQUÊTE_ANNULÉE",
     "aiTyping": "L'IA tape...",
-    "aiTypingTerminal": "TRAITEMENT..."
+    "aiTypingTerminal": "TRAITEMENT...",
+    "streaming": {
+      "toggle": "Activer/désactiver le mode streaming",
+      "on": "Streaming",
+      "off": "Normal",
+      "enableTooltip": "Activer le mode streaming pour des réponses en temps réel",
+      "disableTooltip": "Désactiver le mode streaming pour des réponses complètes"
+    }
   },
   "errors": {
     "connectionLost": "Connexion perdue. Veuillez vérifier votre réseau et réessayer.",

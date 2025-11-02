@@ -91,6 +91,85 @@ export class OllamaModelService implements IModelService {
     }
   }
 
+  public async generateResponseStream(message: string, language?: string): Promise<ReadableStream<string>> {
+    try {
+      const prompt = this.promptFormatter.format(message, language);
+
+      const requestBody: OllamaGenerateRequest = {
+        model: this.modelName,
+        prompt,
+        stream: true,
+        options: {
+          temperature: this.temperature,
+          top_p: this.topP,
+          top_k: this.topK,
+        },
+      };
+
+      const response = await fetch(`${this.baseUrl}/api/generate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(requestBody),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Ollama API error: ${response.status} ${response.statusText}`);
+      }
+
+      if (!response.body) {
+        throw new Error('Response body is null');
+      }
+
+      // Transform Ollama's streaming response to a stream of text chunks
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+
+      return new ReadableStream<string>({
+        async start(controller) {
+          try {
+            while (true) {
+              const { done, value } = await reader.read();
+              
+              if (done) {
+                controller.close();
+                break;
+              }
+
+              // Decode the chunk
+              const chunk = decoder.decode(value, { stream: true });
+              
+              // Ollama sends newline-delimited JSON objects
+              const lines = chunk.split('\n').filter(line => line.trim());
+              
+              for (const line of lines) {
+                try {
+                  const json = JSON.parse(line) as OllamaGenerateResponse;
+                  if (json.response) {
+                    controller.enqueue(json.response);
+                  }
+                  
+                  if (json.done) {
+                    controller.close();
+                    return;
+                  }
+                } catch (parseError) {
+                  console.warn('Failed to parse streaming chunk:', parseError);
+                }
+              }
+            }
+          } catch (error) {
+            controller.error(error);
+          }
+        },
+      });
+    } catch (error) {
+      console.error('Model streaming error:', error);
+      throw new Error('Failed to generate streaming response from model');
+    }
+  }
+
   public async isHealthy(): Promise<boolean> {
     try {
       const response = await fetch(`${this.baseUrl}/api/tags`, {

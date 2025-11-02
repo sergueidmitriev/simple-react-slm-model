@@ -12,7 +12,9 @@ const Chat = () => {
     inputValue,
     isLoading,
     isCancelled,
+    isStreaming,
     setInputValue,
+    setIsStreaming,
     handleSubmit,
     handleCancel,
   } = useChatMessages(isConnected);
@@ -26,9 +28,11 @@ const Chat = () => {
         isLoading={isLoading}
         isCancelled={isCancelled}
         isConnected={isConnected}
+        isStreaming={isStreaming}
         onChange={setInputValue}
         onSubmit={handleSubmit}
         onCancel={handleCancel}
+        onStreamingToggle={() => setIsStreaming(!isStreaming)}
       />
     </ChatContainer>
   );

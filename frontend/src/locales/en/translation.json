@@ -30,7 +30,14 @@
     "requestCancelled": "Request cancelled",
     "requestCancelledTerminal": "REQUEST_ABORTED",
     "aiTyping": "AI is typing...",
-    "aiTypingTerminal": "PROCESSING..."
+    "aiTypingTerminal": "PROCESSING...",
+    "streaming": {
+      "toggle": "Toggle streaming mode",
+      "on": "Streaming",
+      "off": "Normal",
+      "enableTooltip": "Enable streaming mode for real-time responses",
+      "disableTooltip": "Disable streaming mode for complete responses"
+    }
   },
   "errors": {
     "connectionLost": "Connection lost. Please check your network and try again.",

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Message, Theme } from '../types';
+import { Message } from '../types';
 import { chatService } from '../services/api';
 import ChatContainer from './ChatContainer';
 import ChatHeader from './ChatHeader';
@@ -11,7 +11,6 @@ const Chat: React.FC = () => {
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
-  const [theme, setTheme] = useState<Theme>(Theme.Modern);
 
   useEffect(() => {
     // Check API health on component mount
@@ -67,27 +66,14 @@ const Chat: React.FC = () => {
     }
   };
 
-  const handleThemeToggle = () => {
-    setTheme(theme === Theme.Modern ? Theme.Terminal : Theme.Modern);
-  };
-
   return (
-    <ChatContainer theme={theme}>
-      <ChatHeader 
-        theme={theme} 
-        isConnected={isConnected} 
-        onThemeToggle={handleThemeToggle}
-      />
-      <MessageList 
-        messages={messages} 
-        isLoading={isLoading} 
-        theme={theme}
-      />
+    <ChatContainer>
+      <ChatHeader isConnected={isConnected} />
+      <MessageList messages={messages} isLoading={isLoading} />
       <MessageInput
         value={inputValue}
         isLoading={isLoading}
         isConnected={isConnected}
-        theme={theme}
         onChange={setInputValue}
         onSubmit={handleSubmit}
       />

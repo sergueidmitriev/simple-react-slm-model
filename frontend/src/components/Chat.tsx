@@ -13,6 +13,7 @@ const Chat = () => {
     isLoading,
     isCancelled,
     isStreaming,
+    inputRef,
     setInputValue,
     setIsStreaming,
     handleSubmit,
@@ -28,6 +29,7 @@ const Chat = () => {
       />
       <MessageList messages={messages} isLoading={isLoading} />
       <MessageInput
+        inputRef={inputRef}
         value={inputValue}
         isLoading={isLoading}
         isCancelled={isCancelled}

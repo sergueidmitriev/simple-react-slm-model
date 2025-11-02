@@ -10,6 +10,7 @@ interface UseChatMessagesReturn {
   isLoading: boolean;
   isCancelled: boolean;
   isStreaming: boolean;
+  inputRef: React.RefObject<HTMLInputElement>;
   setInputValue: (value: string) => void;
   setIsStreaming: (value: boolean) => void;
   handleSubmit: (e: React.FormEvent) => Promise<void>;
@@ -30,6 +31,7 @@ export const useChatMessages = (isConnected: boolean): UseChatMessagesReturn => 
   const { t, i18n } = useTranslation();
   const abortControllerRef = useRef<AbortController | null>(null);
   const streamingMessageIdRef = useRef<string | null>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // Cleanup on unmount
   useEffect(() => {
@@ -146,6 +148,10 @@ export const useChatMessages = (isConnected: boolean): UseChatMessagesReturn => 
       if (!abortControllerRef.current.signal.aborted) {
         setIsLoading(false);
         streamingMessageIdRef.current = null;
+        // Auto-focus input after response is complete
+        setTimeout(() => {
+          inputRef.current?.focus();
+        }, 100);
       }
     }
   }, [inputValue, isLoading, isConnected, isStreaming, t, i18n.language]);
@@ -156,6 +162,7 @@ export const useChatMessages = (isConnected: boolean): UseChatMessagesReturn => 
     isLoading,
     isCancelled,
     isStreaming,
+    inputRef,
     setInputValue,
     setIsStreaming,
     handleSubmit,

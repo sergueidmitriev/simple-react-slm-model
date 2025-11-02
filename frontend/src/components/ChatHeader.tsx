@@ -40,7 +40,6 @@ const ChatHeader = ({ isConnected, isStreaming, onStreamingToggle }: ChatHeaderP
           </p>
         </div>
         <div className="flex items-center space-x-4">
-          <LanguageToggle />
           <div className="flex flex-col gap-2">
             <ThemeToggle />
             <StreamingToggle 
@@ -49,7 +48,10 @@ const ChatHeader = ({ isConnected, isStreaming, onStreamingToggle }: ChatHeaderP
               disabled={!isConnected}
             />
           </div>
-          <ConnectionStatus isConnected={isConnected} />
+          <div className="flex flex-col gap-2 items-end">
+            <ConnectionStatus isConnected={isConnected} />
+            <LanguageToggle />
+          </div>
         </div>
       </div>
     </div>

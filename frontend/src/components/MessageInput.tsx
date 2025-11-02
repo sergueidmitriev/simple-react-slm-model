@@ -5,6 +5,7 @@ import { Theme } from '../types';
 import { SendIcon, AlertIcon } from './icons';
 
 interface MessageInputProps {
+  inputRef: React.RefObject<HTMLInputElement>;
   value: string;
   isLoading: boolean;
   isCancelled: boolean;
@@ -17,6 +18,7 @@ interface MessageInputProps {
 }
 
 const MessageInput = ({
+  inputRef,
   value,
   isLoading,
   isCancelled,
@@ -67,6 +69,7 @@ const MessageInput = ({
       <form onSubmit={onSubmit} className="flex space-x-3">
         <div className="flex-1 relative">
           <input
+            ref={inputRef}
             type="text"
             value={value}
             onChange={(e) => onChange(e.target.value)}

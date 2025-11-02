@@ -1,13 +1,14 @@
 import { Router } from 'express';
-import { ModelService } from '../services/modelService';
+import { ServiceContainer } from '../container/ServiceContainer';
 
 const router = Router();
-const modelService = new ModelService();
+const container = ServiceContainer.getInstance();
+const modelService = container.modelService;
 
 // Chat endpoint
 router.post('/chat', async (req, res) => {
   try {
-    const { message } = req.body;
+    const { message, language } = req.body;
 
     if (!message || typeof message !== 'string') {
       return res.status(400).json({
@@ -16,9 +17,11 @@ router.post('/chat', async (req, res) => {
       });
     }
 
-    // For now, we'll use a simple echo response
-    // Later this will be replaced with actual model integration
-    const response = await modelService.generateResponse(message);
+    // Optional language parameter for bilingual support
+    const lang = language && typeof language === 'string' ? language : undefined;
+
+    // Generate response using the model
+    const response = await modelService.generateResponse(message, lang);
 
     res.json({
       message: response,
@@ -28,6 +31,23 @@ router.post('/chat', async (req, res) => {
     console.error('Chat error:', error);
     res.status(500).json({
       error: 'Failed to process message',
+      success: false,
+    });
+  }
+});
+
+// Model info endpoint (new!)
+router.get('/model/info', async (req, res) => {
+  try {
+    const info = await modelService.getModelInfo();
+    res.json({
+      data: info,
+      success: true,
+    });
+  } catch (error) {
+    console.error('Model info error:', error);
+    res.status(500).json({
+      error: 'Failed to get model information',
       success: false,
     });
   }

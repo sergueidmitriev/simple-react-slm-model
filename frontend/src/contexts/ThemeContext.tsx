@@ -1,5 +1,5 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { Theme } from '../types';
+import { usePreferences } from './PreferencesContext';
 
 interface ThemeContextType {
   theme: Theme;
@@ -7,42 +7,25 @@ interface ThemeContextType {
   toggleTheme: () => void;
 }
 
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
+/**
+ * Hook to access theme from preferences
+ * Now uses PreferencesContext under the hood
+ */
+export const useTheme = (): ThemeContextType => {
+  const { preferences, updatePreferences } = usePreferences();
 
-interface ThemeProviderProps {
-  children: ReactNode;
-}
-
-export const ThemeProvider = ({ children }: ThemeProviderProps) => {
-  const [theme, setTheme] = useState<Theme>(() => {
-    // Try to load from localStorage
-    const saved = localStorage.getItem('theme');
-    return (saved as Theme) || Theme.Modern;
-  });
-
-  useEffect(() => {
-    // Save to localStorage
-    localStorage.setItem('theme', theme);
-    
-    // Apply theme to document root
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
-
-  const toggleTheme = () => {
-    setTheme(theme === Theme.Modern ? Theme.Terminal : Theme.Modern);
+  const setTheme = (theme: Theme) => {
+    updatePreferences({ theme });
   };
 
-  return (
-    <ThemeContext.Provider value={{ theme, setTheme, toggleTheme }}>
-      {children}
-    </ThemeContext.Provider>
-  );
-};
+  const toggleTheme = () => {
+    const newTheme = preferences.theme === Theme.Modern ? Theme.Terminal : Theme.Modern;
+    updatePreferences({ theme: newTheme });
+  };
 
-export const useTheme = (): ThemeContextType => {
-  const context = useContext(ThemeContext);
-  if (!context) {
-    throw new Error('useTheme must be used within ThemeProvider');
-  }
-  return context;
+  return {
+    theme: preferences.theme,
+    setTheme,
+    toggleTheme,
+  };
 };

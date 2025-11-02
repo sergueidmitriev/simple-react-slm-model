@@ -9,25 +9,30 @@
 
 This document describes the theme system implementation in the Simple React SLM Model application. The system provides a clean separation of concerns between styling and component logic.
 
-## Architecture Pattern: Theme Context + CSS Variables
+## Architecture Pattern: Preferences Context + CSS Variables
 
 ### Key Principles
 1. **Complete separation of styling from components** - All styling logic is in CSS files
-2. **No prop drilling** - Theme state managed via React Context
+2. **No prop drilling** - Theme state managed via Preferences Context
 3. **Semantic class names** - Components use descriptive CSS classes
 4. **CSS Custom Properties** - Dynamic theming through CSS variables
-5. **LocalStorage persistence** - Theme preference saved across sessions
+5. **LocalStorage persistence** - All preferences (theme, language, streaming) saved across sessions
 
 ## File Structure
 
 ```
 frontend/src/
 ├── contexts/
-│   └── ThemeContext.tsx        # Global theme state management
+│   ├── PreferencesContext.tsx  # Global preferences state (theme, language, streaming)
+│   └── ThemeContext.tsx        # Theme hook (wrapper around PreferencesContext)
 ├── styles/
 │   └── theme.css               # All theme-specific styles
 ├── types/
-│   └── theme.ts                # Theme enum definition
+│   ├── theme.ts                # Theme enum definition
+│   ├── language.ts             # Language enum definition
+│   └── preferences.ts          # Preferences interface
+├── utils/
+│   └── preferences.ts          # LocalStorage utilities
 └── components/
     ├── Chat.tsx                # No theme prop drilling
     ├── ChatContainer.tsx       # Uses .chat-container class
@@ -41,23 +46,30 @@ frontend/src/
 
 ## Implementation Details
 
-### 1. Theme Context (`ThemeContext.tsx`)
+### 1. Preferences Context (`PreferencesContext.tsx`)
 
-Provides global theme state without prop drilling:
+Provides global preferences state (theme, language, streaming) without prop drilling:
 
 ```typescript
-interface ThemeContextType {
+interface Preferences {
+  language: Language;
   theme: Theme;
-  setTheme: (theme: Theme) => void;
-  toggleTheme: () => void;
+  streaming: boolean;
+}
+
+interface PreferencesContextValue {
+  preferences: Preferences;
+  updatePreferences: (updates: Partial<Preferences>) => void;
+  resetPreferences: () => void;
 }
 ```
 
 Features:
 - React Context API for state management
-- `useTheme()` custom hook for consuming context
+- `usePreferences()` custom hook for consuming context
 - LocalStorage integration for persistence
-- Automatic `data-theme` attribute on document root
+- Automatic `data-theme` attribute on document root for theme changes
+- Type-safe with enum values
 
 ### 2. CSS Variables (`theme.css`)
 
@@ -150,7 +162,7 @@ const MessageComponent: React.FC<MessageProps> = ({ message }) => {
 ```typescript
 import { useTheme } from '../contexts/ThemeContext';
 
-const MyComponent: React.FC = () => {
+const MyComponent = () => {
   const { theme, toggleTheme } = useTheme();
   
   // Use theme value for logic (not styling)
@@ -162,6 +174,32 @@ const MyComponent: React.FC = () => {
     <div className="my-component">  {/* CSS handles styling */}
       <h1>{title}</h1>
       <button onClick={toggleTheme}>Toggle Theme</button>
+    </div>
+  );
+};
+```
+
+### Using the Preferences Hook:
+```typescript
+import { usePreferences } from '../contexts/PreferencesContext';
+import { Theme } from '../types';
+
+const MyComponent = () => {
+  const { preferences, updatePreferences } = usePreferences();
+  
+  // Access any preference
+  const { theme, language, streaming } = preferences;
+  
+  // Update preferences
+  const handleThemeChange = () => {
+    updatePreferences({ 
+      theme: theme === Theme.Modern ? Theme.Terminal : Theme.Modern 
+    });
+  };
+  
+  return (
+    <div className="my-component">
+      <button onClick={handleThemeChange}>Toggle Theme</button>
     </div>
   );
 };
@@ -187,8 +225,9 @@ const MyComponent: React.FC = () => {
 
 ### 4. **User Experience**
 - Instant theme switching via CSS
-- Theme preference persists across sessions
+- All preferences persist across sessions (theme, language, streaming)
 - Smooth transitions between themes
+- Single source of truth for all user settings
 
 ## Adding a New Theme
 
@@ -237,10 +276,13 @@ To test themes:
 ### Files Changed
 - ✅ Removed theme props from all component interfaces
 - ✅ Removed `/frontend/src/utils/themeStyles.ts` (deprecated - no longer needed)
-- ✅ Created `/frontend/src/contexts/ThemeContext.tsx`
+- ✅ Created `/frontend/src/contexts/PreferencesContext.tsx` (manages all preferences)
+- ✅ Updated `/frontend/src/contexts/ThemeContext.tsx` (now uses PreferencesContext)
 - ✅ Created `/frontend/src/styles/theme.css`
 - ✅ Updated all 8 components to use CSS classes
-- ✅ Wrapped `App` with `ThemeProvider` in `main.tsx`
+- ✅ Wrapped `App` with `PreferencesProvider` in `main.tsx`
+- ✅ Created `/frontend/src/types/preferences.ts` and `/frontend/src/types/language.ts`
+- ✅ Created `/frontend/src/utils/preferences.ts` for localStorage management
 
 ### Breaking Changes
 None - this is an internal refactoring. The UI and functionality remain identical.
@@ -253,3 +295,5 @@ Possible improvements:
 - Support user-customizable colors
 - Add dark mode auto-detection from system preferences
 - Add per-component theme overrides
+- Add more user preferences (font size, animation speed, etc.)
+- Sync preferences across devices via backend API

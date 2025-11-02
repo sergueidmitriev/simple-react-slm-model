@@ -6,11 +6,12 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile.dev
+    ports:
+      - "3002:3000"
     volumes:
       - ./frontend:/app
       - /app/node_modules
     environment:
-      - VITE_API_URL=http://localhost:3001
       - NODE_ENV=development
     command: npm run dev
 

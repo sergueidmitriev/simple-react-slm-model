@@ -45,6 +45,12 @@ dev: check
 	@echo "Starting development environment..."
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
 
+# Development with rebuild (no cache)
+dev-fresh: check
+	@echo "Starting development environment with fresh build..."
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml build --no-cache
+	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+
 # Build production images
 build: check
 	@echo "Building production images..."
@@ -147,3 +153,8 @@ frontend-preview:
 frontend-lint:
 	@echo "Linting frontend code..."
 	cd frontend && npm run lint
+
+# Test API connectivity
+test-api:
+	@echo "Testing API connectivity..."
+	@curl -f http://localhost:3001/api/health || echo "❌ Backend API not accessible at http://localhost:3001"

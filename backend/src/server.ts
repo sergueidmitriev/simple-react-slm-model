@@ -5,7 +5,7 @@ import morgan from 'morgan';
 import chatRoutes from './routes/chat';
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = +(process.env.PORT || 3001);
 
 // Middleware
 app.use(helmet());

@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { useTheme } from '../contexts/ThemeContext';
 import { Theme } from '../types';
 import { SendIcon, AlertIcon } from './icons';
-import { StreamingToggle } from './StreamingToggle';
 
 interface MessageInputProps {
   value: string;
@@ -22,11 +21,9 @@ const MessageInput = ({
   isLoading,
   isCancelled,
   isConnected,
-  isStreaming,
   onChange,
   onSubmit,
   onCancel,
-  onStreamingToggle,
 }: MessageInputProps) => {
   const { t } = useTranslation();
   const { theme } = useTheme();
@@ -85,13 +82,6 @@ const MessageInput = ({
             </div>
           )}
         </div>
-        
-        {/* Streaming Toggle */}
-        <StreamingToggle
-          isStreaming={isStreaming}
-          onToggle={onStreamingToggle}
-          disabled={isLoading || !isConnected}
-        />
         
         {isLoading ? (
           <button

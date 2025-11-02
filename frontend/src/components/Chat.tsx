@@ -21,7 +21,11 @@ const Chat = () => {
 
   return (
     <ChatContainer>
-      <ChatHeader isConnected={isConnected} />
+      <ChatHeader 
+        isConnected={isConnected}
+        isStreaming={isStreaming}
+        onStreamingToggle={() => setIsStreaming(!isStreaming)}
+      />
       <MessageList messages={messages} isLoading={isLoading} />
       <MessageInput
         value={inputValue}

@@ -6,7 +6,10 @@
     "subtitleTerminal": "SYSTÈME v1.0.0 PRÊT"
   },
   "theme": {
-    "switchStyle": "Changer de style"
+    "switchStyle": "Changer de style",
+    "title": "Thème",
+    "modern": "Moderne",
+    "terminal": "Terminal"
   },
   "status": {
     "online": "En ligne",
@@ -33,6 +36,9 @@
     "aiTypingTerminal": "TRAITEMENT...",
     "streaming": {
       "toggle": "Activer/désactiver le mode streaming",
+      "title": "Réponse",
+      "complete": "Complète",
+      "streaming": "Streaming",
       "on": "Streaming",
       "off": "Normal",
       "enableTooltip": "Activer le mode streaming pour des réponses en temps réel",

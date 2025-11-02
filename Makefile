@@ -44,6 +44,9 @@ check:
 dev: check
 	@echo "Starting development environment..."
 	docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+	@echo ""
+	@echo "Frontend: http://localhost:3002 (development with hot reload)"
+	@echo "Backend API: http://localhost:3001"
 
 # Development with rebuild (no cache)
 dev-fresh: check
@@ -72,7 +75,7 @@ up: check
 	docker-compose up --build -d
 	@echo ""
 	@echo "🎉 Services started successfully!"
-	@echo "Frontend: http://localhost:3000"
+	@echo "Frontend: http://localhost:3000 (production)"
 	@echo "Backend API: http://localhost:3001"
 	@echo "Model service: http://localhost:8000"
 	@echo ""

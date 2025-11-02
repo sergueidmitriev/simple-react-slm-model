@@ -1,0 +1,41 @@
+{
+  "header": {
+    "title": "SLM Chat Assistant",
+    "titleTerminal": "> SLM_TERMINAL",
+    "subtitle": "Powered by Small Language Model",
+    "subtitleTerminal": "SYSTEM v1.0.0 READY"
+  },
+  "theme": {
+    "switchStyle": "Switch style"
+  },
+  "status": {
+    "online": "Online",
+    "onlineTerminal": "[ONLINE]",
+    "offline": "Offline",
+    "connectedTooltip": "Backend API is connected and ready to process messages",
+    "disconnectedTooltip": "Backend API connection failed. Check if the server is running."
+  },
+  "chat": {
+    "emptyTitle": "Start a conversation",
+    "emptyTitleTerminal": "> AWAITING INPUT_",
+    "emptySubtitle": "Send a message to begin chatting",
+    "emptySubtitleTerminal": "Type command below...",
+    "inputPlaceholder": "Type your message here...",
+    "inputPlaceholderTerminal": "> Enter command...",
+    "sendButton": "Send",
+    "sendButtonTerminal": "SEND",
+    "sending": "Sending",
+    "aiTyping": "AI is typing...",
+    "aiTypingTerminal": "PROCESSING..."
+  },
+  "errors": {
+    "connectionLost": "Connection lost. Please check your network and try again.",
+    "connectionLostTerminal": "ERROR: CONNECTION_LOST",
+    "genericError": "Sorry, I encountered an error. Please try again."
+  },
+  "language": {
+    "switch": "Language",
+    "english": "English",
+    "french": "Français"
+  }
+}

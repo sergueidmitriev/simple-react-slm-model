@@ -69,7 +69,7 @@ docker-compose up --build
 # Development mode with hot reload
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
 
-# Frontend: http://localhost:3000
+# Frontend: http://localhost:3002 (development) or http://localhost:3000 (production)
 # Backend API: http://localhost:3001
 # Model service: http://localhost:8000 (placeholder)
 ```
@@ -105,7 +105,7 @@ cd frontend && npm run dev
 # Start backend (terminal 2)
 cd backend && npm run dev
 
-# Frontend: http://localhost:3000
+# Frontend: http://localhost:3000 (Vite dev server)
 # Backend: http://localhost:3001
 ```
 

@@ -5,8 +5,35 @@ export interface Message {
   timestamp: Date;
 }
 
-export interface ChatResponse {
+export { Theme } from './theme';
+export { ApiError, ErrorType } from './errors';
+
+/**
+ * Success response from chat API
+ */
+export interface ChatSuccessResponse {
   message: string;
-  success: boolean;
-  error?: string;
+  success: true;
 }
+
+/**
+ * Error response from chat API
+ */
+export interface ChatErrorResponse {
+  message?: string;
+  success: false;
+  error: string;
+}
+
+/**
+ * Discriminated union for chat responses
+ * Use success field to narrow the type
+ */
+export type ChatResponse = ChatSuccessResponse | ChatErrorResponse;
+
+/**
+ * Type guard to check if response is successful
+ */
+export const isChatSuccess = (response: ChatResponse): response is ChatSuccessResponse => {
+  return response.success === true;
+};

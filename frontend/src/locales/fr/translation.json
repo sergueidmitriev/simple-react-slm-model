@@ -25,6 +25,10 @@
     "sendButton": "Envoyer",
     "sendButtonTerminal": "ENVOYER",
     "sending": "Envoi",
+    "cancelButton": "Annuler",
+    "cancelButtonTerminal": "ANNULER",
+    "requestCancelled": "Requête annulée",
+    "requestCancelledTerminal": "REQUÊTE_ANNULÉE",
     "aiTyping": "L'IA tape...",
     "aiTypingTerminal": "TRAITEMENT..."
   },

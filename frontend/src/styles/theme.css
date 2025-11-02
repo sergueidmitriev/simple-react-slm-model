@@ -650,6 +650,76 @@ body {
   font-family: var(--font-mono);
 }
 
+/* Cancel message */
+.cancel-message {
+  margin-top: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+[data-theme="modern"] .cancel-message {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+}
+
+[data-theme="terminal"] .cancel-message {
+  background: #450a0a;
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  font-family: var(--font-mono);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Cancel button */
+.chat-button-cancel {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s;
+  font-family: var(--font-family);
+}
+
+[data-theme="modern"] .chat-button-cancel {
+  background: #dc2626;
+  color: white;
+  border-radius: 1rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+[data-theme="modern"] .chat-button-cancel:hover {
+  background: #b91c1c;
+}
+
+[data-theme="terminal"] .chat-button-cancel {
+  background: #450a0a;
+  border: 2px solid #ef4444;
+  color: #ef4444;
+  font-family: var(--font-mono);
+}
+
+[data-theme="terminal"] .chat-button-cancel:hover {
+  background: #7f1d1d;
+}
+
 /* Tooltip */
 .tooltip {
   position: absolute;

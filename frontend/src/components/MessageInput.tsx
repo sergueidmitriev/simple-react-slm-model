@@ -2,22 +2,26 @@ import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../contexts/ThemeContext';
 import { Theme } from '../types';
-import { SendIcon, SpinnerIcon, AlertIcon } from './icons';
+import { SendIcon, AlertIcon } from './icons';
 
 interface MessageInputProps {
   value: string;
   isLoading: boolean;
+  isCancelled: boolean;
   isConnected: boolean;
   onChange: (value: string) => void;
   onSubmit: (e: React.FormEvent) => void;
+  onCancel: () => void;
 }
 
 const MessageInput = ({
   value,
   isLoading,
+  isCancelled,
   isConnected,
   onChange,
   onSubmit,
+  onCancel,
 }: MessageInputProps) => {
   const { t } = useTranslation();
   const { theme } = useTheme();
@@ -42,6 +46,20 @@ const MessageInput = ({
     [theme, t]
   );
 
+  const cancelButtonText = useMemo(
+    () => theme === Theme.Terminal 
+      ? t('chat.cancelButtonTerminal')
+      : t('chat.cancelButton'),
+    [theme, t]
+  );
+
+  const cancelledMessage = useMemo(
+    () => theme === Theme.Terminal 
+      ? t('chat.requestCancelledTerminal')
+      : t('chat.requestCancelled'),
+    [theme, t]
+  );
+
   return (
     <div className="message-input-container">
       <form onSubmit={onSubmit} className="flex space-x-3">
@@ -54,7 +72,7 @@ const MessageInput = ({
             className="chat-input"
             disabled={isLoading || !isConnected}
           />
-          {value.trim() && (
+          {value.trim() && !isLoading && (
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
               <span className="text-xs opacity-50">
                 {value.length}
@@ -62,23 +80,25 @@ const MessageInput = ({
             </div>
           )}
         </div>
-        <button
-          type="submit"
-          disabled={isLoading || !isConnected || !value.trim()}
-          className="chat-button"
-        >
-          {isLoading ? (
-            <>
-              <SpinnerIcon />
-              <span>{buttonText}</span>
-            </>
-          ) : (
-            <>
-              <SendIcon />
-              <span>{buttonText}</span>
-            </>
-          )}
-        </button>
+        {isLoading ? (
+          <button
+            type="button"
+            onClick={onCancel}
+            className="chat-button-cancel"
+          >
+            <span>✕</span>
+            <span>{cancelButtonText}</span>
+          </button>
+        ) : (
+          <button
+            type="submit"
+            disabled={!isConnected || !value.trim()}
+            className="chat-button"
+          >
+            <SendIcon />
+            <span>{buttonText}</span>
+          </button>
+        )}
       </form>
       
       {!isConnected && (
@@ -86,6 +106,14 @@ const MessageInput = ({
           <AlertIcon className="w-4 h-4 text-red-500" />
           <span className="text-sm">
             {errorMessage}
+          </span>
+        </div>
+      )}
+      
+      {isCancelled && (
+        <div className="cancel-message">
+          <span className="text-sm">
+            {cancelledMessage}
           </span>
         </div>
       )}

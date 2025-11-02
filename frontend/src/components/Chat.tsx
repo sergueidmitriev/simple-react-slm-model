@@ -11,8 +11,10 @@ const Chat = () => {
     messages,
     inputValue,
     isLoading,
+    isCancelled,
     setInputValue,
     handleSubmit,
+    handleCancel,
   } = useChatMessages(isConnected);
 
   return (
@@ -22,9 +24,11 @@ const Chat = () => {
       <MessageInput
         value={inputValue}
         isLoading={isLoading}
+        isCancelled={isCancelled}
         isConnected={isConnected}
         onChange={setInputValue}
         onSubmit={handleSubmit}
+        onCancel={handleCancel}
       />
     </ChatContainer>
   );

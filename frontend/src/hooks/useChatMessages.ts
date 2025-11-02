@@ -8,8 +8,10 @@ interface UseChatMessagesReturn {
   messages: Message[];
   inputValue: string;
   isLoading: boolean;
+  isCancelled: boolean;
   setInputValue: (value: string) => void;
   handleSubmit: (e: React.FormEvent) => Promise<void>;
+  handleCancel: () => void;
 }
 
 /**
@@ -21,6 +23,7 @@ export const useChatMessages = (isConnected: boolean): UseChatMessagesReturn => 
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isCancelled, setIsCancelled] = useState(false);
   const { t, i18n } = useTranslation();
   const abortControllerRef = useRef<AbortController | null>(null);
 
@@ -31,9 +34,25 @@ export const useChatMessages = (isConnected: boolean): UseChatMessagesReturn => 
     };
   }, []);
 
+  const handleCancel = useCallback(() => {
+    if (abortControllerRef.current && isLoading) {
+      abortControllerRef.current.abort();
+      setIsLoading(false);
+      setIsCancelled(true);
+      
+      // Hide cancel message after 3 seconds
+      setTimeout(() => {
+        setIsCancelled(false);
+      }, 3000);
+    }
+  }, [isLoading]);
+
   const handleSubmit = useCallback(async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputValue.trim() || isLoading || !isConnected) return;
+
+    // Clear any previous cancel message
+    setIsCancelled(false);
 
     // Cancel any pending request
     abortControllerRef.current?.abort();
@@ -93,7 +112,9 @@ export const useChatMessages = (isConnected: boolean): UseChatMessagesReturn => 
     messages,
     inputValue,
     isLoading,
+    isCancelled,
     setInputValue,
     handleSubmit,
+    handleCancel,
   };
 };

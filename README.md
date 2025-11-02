@@ -1,12 +1,18 @@
-# Simple project with React + SLM Model
+# Simple React + SLM Model
 
-A proof-of-concept React application demonstrating clean architecture patterns with a bilingual chat interface powered by Qwen2.5-3B language model via Ollama.
+A proof-of-concept React application demonstrating clean architecture patterns with a bilingual AI chat interface. Features modern React patterns (custom hooks, TypeScript), OOP backend with dependency injection, and integration with Qwen2.5-3B language model via Ollama.
 
 ![Light Theme](./docs/assets/chat-light.png)
-*Light Theme - Clean, modern interface*
-
 ![Terminal Theme](./docs/assets/chat-terminal.png)
-*Terminal Theme - Retro computer aesthetic*
+
+## ✨ Key Features
+
+- 🤖 **AI-Powered Chat** - Bilingual responses (English/French) from Qwen2.5-3B
+- 🎨 **Two Themes** - Light and Old Terminal modes
+- 🏗️ **Clean Architecture** - Custom hooks, DI container, SOLID principles
+- 🌍 **i18n Support** - Full English/French localization
+- ⚡ **Performance** - React.memo, useMemo, request cancellation
+- 🐳 **Docker-First** - Complete containerization with hot reload
 
 ## Tech Stack
 
@@ -15,249 +21,95 @@ A proof-of-concept React application demonstrating clean architecture patterns w
 - **AI Model**: Ollama with Qwen2.5-3B (bilingual EN/FR)
 - **Infrastructure**: Docker Compose, Nginx
 
-## 🚀 Getting Started
+## 🚀 Quick Start
 
 ### Prerequisites
 
-- **Docker & Docker Compose** - [Install Docker](https://docs.docker.com/get-docker/)
-- **Git** - For cloning the repository
-- **4GB+ RAM** - Required for running the AI model
-- **3GB+ disk space** - For Docker images and model
+- Docker & Docker Compose ([Install Docker](https://docs.docker.com/get-docker/))
+- 4GB+ RAM and 3GB+ disk space
 
-### Quick Start (5 minutes)
+### Get Running (5 minutes)
 
-**1. Clone the repository:**
 ```bash
+# 1. Clone repository
 git clone https://github.com/sergueidmitriev/simple-react-slm-model.git
 cd simple-react-slm-model
-```
 
-**2. Start all services:**
-```bash
+# 2. Start all services
 make dev
-```
 
-This command will:
-- Start frontend (React) on http://localhost:3002
-- Start backend (Express) on http://localhost:3001
-- Start Ollama (AI model service) on http://localhost:11434
-
-**3. Setup the AI model (one-time, ~1.8GB download):**
-
-Open a new terminal and run:
-```bash
+# 3. Setup AI model (one-time, ~1.8GB download)
 make model-setup
+
+# 4. Open browser
+open http://localhost:3002
 ```
 
-Wait ~5 minutes for the model to download. You'll see:
-```
-✅ Model downloaded successfully!
-```
+**Services running:**
+- Frontend: http://localhost:3002
+- Backend: http://localhost:3001
+- Ollama: http://localhost:11434
 
-**4. Open the app:**
+### Test It Works
 
-Visit http://localhost:3002 and start chatting! 🎉
+1. **Send a message**: "What is React?"
+2. **Toggle language**: Switch to French and ask "Qu'est-ce que Docker?"
+3. **Try themes**: Click theme toggle for Light/Dark/Terminal modes
 
-### Testing It Works
+## 📚 Documentation
 
-**Send a test message:**
-- Type: "What is React?"
-- You should get a response from the AI model
+- **[Development Guide](./docs/DEVELOPMENT.md)** - Detailed setup, architecture, API docs
+- **[Model Setup](./docs/MODEL_SETUP.md)** - Ollama configuration and testing
+- **[Integration Guide](./docs/INTEGRATION.md)** - How components work together
+- **[Theme Architecture](./docs/THEME_ARCHITECTURE.md)** - Theme system details
 
-**Try bilingual support:**
-- Click the language toggle (EN ⟷ FR)
-- Type: "Qu'est-ce que Docker?"
-- The model responds in French!
+## 🔧 Common Commands
 
-**Try themes:**
-- Click the theme toggle to switch between Light/Dark/Terminal themes
-
-### Troubleshooting
-
-**Services not starting?**
 ```bash
-# Stop everything
-make down
-
-# Start fresh
-make dev
+make dev           # Start development with hot reload
+make down          # Stop all services
+make logs          # View logs
+make model-test    # Test the AI model
+make clean         # Clean Docker resources
 ```
+
+## 🐛 Troubleshooting
 
 **Model not responding?**
 ```bash
-# Check if model is downloaded
-make model-list
-
-# If empty, run setup again
-make model-setup
+make model-list      # Check if model is downloaded
+make model-setup     # Re-download if needed
 ```
 
-**Port already in use?**
+**Services not starting?**
 ```bash
-# Check what's using the ports
-sudo lsof -i :3002  # Frontend
-sudo lsof -i :3001  # Backend
-sudo lsof -i :11434 # Ollama
-
-# Stop conflicting service or change ports in docker-compose.dev.yml
-```
-
-**Backend can't connect to model?**
-```bash
-# Check all containers are running
-docker ps
-
-# Restart backend
-docker-compose restart backend
-```
-
-**Something's broken?**
-```bash
-# Nuclear option - clean everything and start over
 make down
-make clean
 make dev
-make model-setup
 ```
 
-### Stopping the Application
-
+**Port conflicts?**
 ```bash
-# Stop all services (preserves data)
-make down
-
-# Stop and remove everything including volumes
-make clean
+# Check ports 3002, 3001, 11434
+sudo lsof -i :3002
+# Change ports in docker-compose.dev.yml if needed
 ```
 
----
+**More help**: See [Development Guide](./docs/DEVELOPMENT.md#troubleshooting)
 
-## Quick Start
+## 🏗️ Architecture Highlights
 
-### Using Makefile (Recommended)
+**Frontend:**
+- Custom hooks separate business logic from UI
+- Request cancellation with AbortController
+- Discriminated union types for type safety
+- Performance optimization with React.memo
 
-```bash
-# View all available commands
-make help
+**Backend:**
+- Interfaces for loose coupling (`IModelService`, `IPromptFormatter`)
+- Dependency injection via `ServiceContainer`
+- SOLID principles throughout
+- Easy to swap model providers
 
-# Start development environment
-make dev
+## 📄 License
 
-# Or start production environment
-make up
-
-# View logs
-make logs
-
-# Stop services
-make down
-
-# Clean up Docker resources
-make clean
-```
-
-### Manual Docker Commands
-
-```bash
-# Production mode
-docker-compose up --build
-
-# Development mode with hot reload
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
-
-# Frontend: http://localhost:3002 (development) or http://localhost:3000 (production)
-# Backend API: http://localhost:3001
-# Model service: http://localhost:8000 (placeholder)
-```
-
----
-
-## 🛠️ Development
-
-### Prerequisites
-
-- Docker & Docker Compose
-- Node.js 18+ (for local development)
-- Git
-
-### Environment Setup
-
-```bash
-# Copy environment template and install dependencies
-make dev-setup
-
-# Or manually:
-cp .env.example .env
-make install
-```
-
-### Local Development (without Docker)
-
-```bash
-# Install dependencies
-make install
-
-# Start frontend (terminal 1)
-cd frontend && npm run dev
-
-# Start backend (terminal 2)
-cd backend && npm run dev
-
-# Frontend: http://localhost:3000 (Vite dev server)
-# Backend: http://localhost:3001
-```
-
-## Features
-
-### Current Implementation
-
-- ✅ **Chat Interface**: Clean, responsive chat UI
-- ✅ **Real-time Communication**: Frontend ↔ Backend API
-- ✅ **Mock Responses**: Placeholder model responses
-- ✅ **Health Checks**: API connectivity status
-- ✅ **Docker Setup**: Complete containerization
-- ✅ **Development Tools**: Hot reload, logging
-
-### Planned Features
-
-- 🔄 **SLM Integration**: Actual language model
-- 🔄 **Message History**: Persistent chat history
-- 🔄 **User Authentication**: Optional user system
-- 🔄 **Model Selection**: Multiple model support
-- 🔄 **Advanced UI**: Better styling and UX
-
-## API Endpoints
-
-- `GET /api/health` - Health check
-- `POST /api/chat` - Send message to model
-
-## Architecture
-
-```
-┌─────────────┐    ┌─────────────┐    ┌─────────────┐
-│   Frontend  │───▶│   Backend   │───▶│    Model    │
-│  (React)    │    │  (Express)  │    │  (Python)   │
-│   :3000     │    │    :3001    │    │    :8000    │
-└─────────────┘    └─────────────┘    └─────────────┘
-```
-
-## Adding Your SLM Model
-
-When you're ready to integrate your chosen SLM model:
-
-1. **Update the model service** (`model/` directory)
-2. **Configure model communication** in `backend/src/services/modelService.ts`
-3. **Add model-specific environment variables**
-4. **Update docker-compose.yml** with model requirements
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test with `make dev`
-5. Submit a pull request
-
-## License
-
-MIT License - see LICENSE file for details
+MIT License - see [LICENSE](./LICENSE) file for details.

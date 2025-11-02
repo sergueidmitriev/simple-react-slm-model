@@ -25,6 +25,10 @@
     "sendButton": "Send",
     "sendButtonTerminal": "SEND",
     "sending": "Sending",
+    "cancelButton": "Cancel",
+    "cancelButtonTerminal": "ABORT",
+    "requestCancelled": "Request cancelled",
+    "requestCancelledTerminal": "REQUEST_ABORTED",
     "aiTyping": "AI is typing...",
     "aiTypingTerminal": "PROCESSING..."
   },

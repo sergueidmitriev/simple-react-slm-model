@@ -1,11 +1,11 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { Message } from '../types';
 
 interface MessageProps {
   message: Message;
 }
 
-const MessageComponent: React.FC<MessageProps> = memo(({ message }) => {
+const MessageComponent = memo(({ message }: MessageProps) => {
   const isUser = message.role === 'user';
 
   return (

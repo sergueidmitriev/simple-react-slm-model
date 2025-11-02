@@ -1,10 +1,10 @@
-import React from 'react';
+import { ReactNode } from 'react';
 
 interface ChatContainerProps {
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
-const ChatContainer: React.FC<ChatContainerProps> = ({ children }) => {
+const ChatContainer = ({ children }: ChatContainerProps) => {
   return (
     <div className="chat-container">
       <div className="chat-box">

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../contexts/ThemeContext';
 import { Theme } from '../types';
@@ -10,7 +10,7 @@ interface ChatHeaderProps {
   isConnected: boolean;
 }
 
-const ChatHeader: React.FC<ChatHeaderProps> = ({ isConnected }) => {
+const ChatHeader = ({ isConnected }: ChatHeaderProps) => {
   const { theme } = useTheme();
   const { t } = useTranslation();
   

@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../contexts/ThemeContext';
 import { Theme } from '../types';
@@ -7,7 +7,7 @@ interface ConnectionStatusProps {
   isConnected: boolean;
 }
 
-const ConnectionStatus: React.FC<ConnectionStatusProps> = ({ isConnected }) => {
+const ConnectionStatus = ({ isConnected }: ConnectionStatusProps) => {
   const { theme } = useTheme();
   const { t } = useTranslation();
   

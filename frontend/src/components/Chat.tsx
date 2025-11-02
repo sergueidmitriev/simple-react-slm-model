@@ -1,4 +1,3 @@
-import React from 'react';
 import { useHealthCheck } from '../hooks/useHealthCheck';
 import { useChatMessages } from '../hooks/useChatMessages';
 import ChatContainer from './ChatContainer';
@@ -6,7 +5,7 @@ import ChatHeader from './ChatHeader';
 import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 
-const Chat: React.FC = () => {
+const Chat = () => {
   const isConnected = useHealthCheck();
   const {
     messages,

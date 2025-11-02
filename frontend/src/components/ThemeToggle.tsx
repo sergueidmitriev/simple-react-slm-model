@@ -1,8 +1,7 @@
-import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../contexts/ThemeContext';
 
-const ThemeToggle: React.FC = () => {
+const ThemeToggle = () => {
   const { toggleTheme } = useTheme();
   const { t } = useTranslation();
 

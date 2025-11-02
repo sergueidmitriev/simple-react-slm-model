@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../contexts/ThemeContext';
 import { Theme } from '../types';
@@ -11,13 +11,13 @@ interface MessageInputProps {
   onSubmit: (e: React.FormEvent) => void;
 }
 
-const MessageInput: React.FC<MessageInputProps> = ({
+const MessageInput = ({
   value,
   isLoading,
   isConnected,
   onChange,
   onSubmit,
-}) => {
+}: MessageInputProps) => {
   const { t } = useTranslation();
   const { theme } = useTheme();
 

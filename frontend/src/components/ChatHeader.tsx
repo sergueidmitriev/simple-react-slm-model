@@ -1,8 +1,10 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useTheme } from '../contexts/ThemeContext';
 import { Theme } from '../types';
 import ThemeToggle from './ThemeToggle';
 import ConnectionStatus from './ConnectionStatus';
+import LanguageToggle from './LanguageToggle';
 
 interface ChatHeaderProps {
   isConnected: boolean;
@@ -10,9 +12,10 @@ interface ChatHeaderProps {
 
 const ChatHeader: React.FC<ChatHeaderProps> = ({ isConnected }) => {
   const { theme } = useTheme();
+  const { t } = useTranslation();
   
-  const title = theme === Theme.Terminal ? '> SLM_TERMINAL' : 'SLM Chat Assistant';
-  const subtitle = theme === Theme.Terminal ? 'SYSTEM v1.0.0 READY' : 'Powered by Small Language Model';
+  const title = theme === Theme.Terminal ? t('header.titleTerminal') : t('header.title');
+  const subtitle = theme === Theme.Terminal ? t('header.subtitleTerminal') : t('header.subtitle');
 
   return (
     <div className="chat-header">
@@ -26,6 +29,7 @@ const ChatHeader: React.FC<ChatHeaderProps> = ({ isConnected }) => {
           </p>
         </div>
         <div className="flex items-center space-x-4">
+          <LanguageToggle />
           <ThemeToggle />
           <ConnectionStatus isConnected={isConnected} />
         </div>

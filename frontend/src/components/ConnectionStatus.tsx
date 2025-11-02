@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useTheme } from '../contexts/ThemeContext';
 import { Theme } from '../types';
 
@@ -8,14 +9,15 @@ interface ConnectionStatusProps {
 
 const ConnectionStatus: React.FC<ConnectionStatusProps> = ({ isConnected }) => {
   const { theme } = useTheme();
+  const { t } = useTranslation();
   
   const tooltipText = isConnected 
-    ? 'Backend API is connected and ready to process messages'
-    : 'Backend API connection failed. Check if the server is running.';
+    ? t('status.connectedTooltip')
+    : t('status.disconnectedTooltip');
 
   const statusText = isConnected 
-    ? (theme === Theme.Terminal ? '[ONLINE]' : 'Online') 
-    : 'Offline';
+    ? (theme === Theme.Terminal ? t('status.onlineTerminal') : t('status.online'))
+    : t('status.offline');
 
   return (
     <div className="status-indicator tooltip-trigger">

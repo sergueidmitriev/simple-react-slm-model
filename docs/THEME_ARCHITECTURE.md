@@ -100,19 +100,17 @@ interface MessageProps {
 const MessageComponent: React.FC<MessageProps> = ({ message, theme }) => {
   const isUser = message.role === 'user';
   
-  // ❌ Inline conditional styling logic
+  // ❌ Inline conditional styling logic - using old utility functions
   const bubbleStyles = isUser
-    ? getThemeClasses(theme, {
-        modern: 'bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-2xl',
-        terminal: 'bg-green-950 border-2 border-green-500 text-green-400 font-mono'
-      })
-    : getThemeClasses(theme, {
-        modern: 'bg-white text-gray-800 border border-gray-200 rounded-2xl',
-        terminal: 'bg-black border-2 border-green-600 text-green-500 font-mono'
-      });
+    ? (theme === Theme.Terminal 
+        ? 'bg-green-950 border-2 border-green-500 text-green-400 font-mono'
+        : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-2xl')
+    : (theme === Theme.Terminal
+        ? 'bg-black border-2 border-green-600 text-green-500 font-mono'
+        : 'bg-white text-gray-800 border border-gray-200 rounded-2xl');
 
   return (
-    <div className={cn('max-w-xs px-4 py-3', bubbleStyles)}>
+    <div className={`max-w-xs px-4 py-3 ${bubbleStyles}`}>
       {message.content}
     </div>
   );
@@ -232,9 +230,9 @@ To test themes:
 
 ### Files Changed
 - ✅ Removed theme props from all component interfaces
-- ✅ Removed `utils/themeStyles.ts` utility functions (deprecated)
-- ✅ Created `contexts/ThemeContext.tsx`
-- ✅ Created `styles/theme.css`
+- ✅ Removed `/frontend/src/utils/themeStyles.ts` (deprecated - no longer needed)
+- ✅ Created `/frontend/src/contexts/ThemeContext.tsx`
+- ✅ Created `/frontend/src/styles/theme.css`
 - ✅ Updated all 8 components to use CSS classes
 - ✅ Wrapped `App` with `ThemeProvider` in `main.tsx`
 

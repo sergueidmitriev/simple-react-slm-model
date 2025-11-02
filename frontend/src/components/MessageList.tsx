@@ -1,4 +1,7 @@
 import React, { useRef, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useTheme } from '../contexts/ThemeContext';
+import { Theme } from '../types';
 import { Message } from '../types';
 import MessageComponent from './Message';
 
@@ -9,6 +12,8 @@ interface MessageListProps {
 
 const MessageList: React.FC<MessageListProps> = ({ messages, isLoading }) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { t } = useTranslation();
+  const { theme } = useTheme();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -17,6 +22,10 @@ const MessageList: React.FC<MessageListProps> = ({ messages, isLoading }) => {
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  const emptyTitle = theme === Theme.Terminal ? t('chat.emptyTitleTerminal') : t('chat.emptyTitle');
+  const emptySubtitle = theme === Theme.Terminal ? t('chat.emptySubtitleTerminal') : t('chat.emptySubtitle');
+  const loadingText = theme === Theme.Terminal ? t('chat.aiTypingTerminal') : t('chat.aiTyping');
 
   return (
     <div className="message-list">
@@ -28,10 +37,10 @@ const MessageList: React.FC<MessageListProps> = ({ messages, isLoading }) => {
             </svg>
           </div>
           <h3 className="empty-state-title">
-            Start a conversation
+            {emptyTitle}
           </h3>
           <p className="empty-state-subtitle">
-            Send a message to begin chatting
+            {emptySubtitle}
           </p>
         </div>
       ) : (
@@ -48,7 +57,7 @@ const MessageList: React.FC<MessageListProps> = ({ messages, isLoading }) => {
               <div className="loading-dot"></div>
               <div className="loading-dot"></div>
             </div>
-            <span className="loading-text">AI is typing...</span>
+            <span className="loading-text">{loadingText}</span>
           </div>
         </div>
       )}

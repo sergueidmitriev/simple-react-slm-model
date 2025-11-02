@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Message } from '../types';
 import { chatService } from '../services/api';
 import ChatContainer from './ChatContainer';
@@ -11,6 +12,7 @@ const Chat: React.FC = () => {
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     // Check API health on component mount
@@ -56,7 +58,7 @@ const Chat: React.FC = () => {
     } catch (error) {
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: 'Sorry, I encountered an error. Please try again.',
+        content: t('errors.genericError'),
         role: 'assistant',
         timestamp: new Date(),
       };

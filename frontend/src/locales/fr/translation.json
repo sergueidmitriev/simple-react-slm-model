@@ -1,0 +1,41 @@
+{
+  "header": {
+    "title": "Assistant de Chat SLM",
+    "titleTerminal": "> TERMINAL_SLM",
+    "subtitle": "Propulsé par un petit modèle de langage",
+    "subtitleTerminal": "SYSTÈME v1.0.0 PRÊT"
+  },
+  "theme": {
+    "switchStyle": "Changer de style"
+  },
+  "status": {
+    "online": "En ligne",
+    "onlineTerminal": "[EN_LIGNE]",
+    "offline": "Hors ligne",
+    "connectedTooltip": "L'API backend est connectée et prête à traiter les messages",
+    "disconnectedTooltip": "La connexion à l'API backend a échoué. Vérifiez si le serveur fonctionne."
+  },
+  "chat": {
+    "emptyTitle": "Démarrer une conversation",
+    "emptyTitleTerminal": "> EN_ATTENTE_DE_SAISIE_",
+    "emptySubtitle": "Envoyez un message pour commencer à discuter",
+    "emptySubtitleTerminal": "Tapez la commande ci-dessous...",
+    "inputPlaceholder": "Tapez votre message ici...",
+    "inputPlaceholderTerminal": "> Entrez la commande...",
+    "sendButton": "Envoyer",
+    "sendButtonTerminal": "ENVOYER",
+    "sending": "Envoi",
+    "aiTyping": "L'IA tape...",
+    "aiTypingTerminal": "TRAITEMENT..."
+  },
+  "errors": {
+    "connectionLost": "Connexion perdue. Veuillez vérifier votre réseau et réessayer.",
+    "connectionLostTerminal": "ERREUR: CONNEXION_PERDUE",
+    "genericError": "Désolé, j'ai rencontré une erreur. Veuillez réessayer."
+  },
+  "language": {
+    "switch": "Langue",
+    "english": "English",
+    "french": "Français"
+  }
+}

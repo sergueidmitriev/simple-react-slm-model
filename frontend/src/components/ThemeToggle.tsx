@@ -1,13 +1,15 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useTheme } from '../contexts/ThemeContext';
 
 const ThemeToggle: React.FC = () => {
   const { toggleTheme } = useTheme();
+  const { t } = useTranslation();
 
   return (
     <div className="theme-toggle">
       <span className="text-xs">
-        Switch style
+        {t('theme.switchStyle')}
       </span>
       <button
         type="button"

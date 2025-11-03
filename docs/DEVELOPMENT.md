@@ -1,12 +1,11 @@
 # Development Guide
 
-This guide covers detailed development setup, architecture, and advanced usage.
+This guide covers development setup, architecture, and common tasks.
 
 ## Table of Contents
 
 - [Local Development](#local-development)
-- [Project Structure](#project-structure)
-- [Architecture Details](#architecture-details)
+- [Architecture Overview](#architecture-overview)
 - [Available Commands](#available-commands)
 - [API Endpoints](#api-endpoints)
 - [Environment Variables](#environment-variables)
@@ -42,17 +41,15 @@ npm run dev
 # Install Ollama
 curl -fsSL https://ollama.com/install.sh | sh
 
-# Pull model
+# Pull and run model
 ollama pull qwen2.5:3b
-
-# Run Ollama service
 ollama serve
 # Runs on http://localhost:11434
 ```
 
-### Environment Variables
+### Environment Configuration
 
-**Backend** (create `backend/.env`):
+**Backend** (`backend/.env`):
 ```bash
 PORT=3001
 NODE_ENV=development
@@ -61,173 +58,69 @@ OLLAMA_URL=http://localhost:11434
 OLLAMA_MODEL=qwen2.5:3b
 ```
 
-**Frontend** (create `frontend/.env`):
+**Frontend** (`frontend/.env`):
 ```bash
 VITE_API_URL=http://localhost:3001
 ```
 
 ---
 
-## Project Structure
+## Architecture Overview
 
+### Frontend
+
+**Modern React patterns:**
+- Custom hooks for business logic
+- Presentational components
+- Request cancellation with AbortController
+- Strategic performance optimizations
+- Type-safe discriminated unions
+
+**Key concepts:**
+- Hooks separate concerns from UI
+- API layer with interceptors and retry logic
+- Error boundaries for resilience
+- Theme system with CSS custom properties
+- Internationalization support
+
+### Backend
+
+**OOP design with Dependency Injection:**
+- Service container manages dependencies
+- Interface-based abstractions
+- SOLID principles
+- Swappable implementations
+- Centralized configuration
+
+**Architecture layers:**
 ```
-.
-├── frontend/                    # React application
-│   ├── src/
-│   │   ├── components/         # React components
-│   │   │   ├── Chat.tsx        # Main chat (simplified with hooks)
-│   │   │   ├── ErrorBoundary.tsx
-│   │   │   └── icons.tsx       # SVG components
-│   │   ├── hooks/              # Custom hooks (business logic)
-│   │   │   ├── useHealthCheck.ts
-│   │   │   └── useChatMessages.ts
-│   │   ├── services/           # API layer
-│   │   │   └── api.ts          # Axios client with interceptors
-│   │   ├── contexts/           # React contexts
-│   │   │   └── ThemeContext.tsx
-│   │   ├── constants/          # Configuration
-│   │   │   └── api.ts
-│   │   ├── utils/              # Utilities
-│   │   │   ├── errors.ts
-│   │   │   ├── retry.ts
-│   │   │   └── messageId.ts
-│   │   ├── types/              # TypeScript types
-│   │   ├── i18n/               # Translations (EN/FR)
-│   │   └── styles/             # Theme CSS
-│   ├── Dockerfile              # Production (Nginx)
-│   └── Dockerfile.dev          # Development (Node)
-│
-├── backend/                     # Express API
-│   ├── src/
-│   │   ├── interfaces/         # TypeScript interfaces
-│   │   │   ├── IModelService.ts
-│   │   │   └── IPromptFormatter.ts
-│   │   ├── services/           # Service implementations
-│   │   │   └── OllamaModelService.ts
-│   │   ├── formatters/         # Prompt formatting
-│   │   │   └── BilingualPromptFormatter.ts
-│   │   ├── container/          # DI container
-│   │   │   └── ServiceContainer.ts
-│   │   ├── config/             # Configuration
-│   │   │   └── AppConfig.ts
-│   │   ├── routes/             # API routes
-│   │   │   └── chat.ts
-│   │   └── server.ts           # Express app
-│   ├── Dockerfile              # Production
-│   └── Dockerfile.dev          # Development
-│
-├── scripts/                     # Helper scripts
-│   ├── setup-model.sh
-│   ├── test-model.sh
-│   └── interactive-model.sh
-│
-├── docs/                        # Documentation
-│   ├── DEVELOPMENT.md          # This file
-│   ├── MODEL_SETUP.md          # Model guide
-│   ├── INTEGRATION.md          # Integration details
-│   └── THEME_ARCHITECTURE.md   # Theme system
-│
-├── docker-compose.yml           # Production config
-├── docker-compose.dev.yml       # Development config
-└── Makefile                     # Commands
+Service Container (IoC/DI)
+├── Configuration
+├── Prompt Formatter (interface)
+└── Model Service (interface)
+    └── Communicates with Ollama API
 ```
-
----
-
-## Architecture Details
-
-### Frontend Architecture
-
-**Modern React Patterns:**
-
-```typescript
-// Custom Hooks (business logic)
-useHealthCheck         - API health monitoring with AbortController
-useChatMessages        - Message state + API calls with cancellation
-
-// Components (presentational only)
-Chat                   - Main container (33 lines, uses hooks)
-MessageList            - Message display with memoization
-MessageInput           - Input handling
-ErrorBoundary          - Error catching
-
-// Services
-api.ts                 - HTTP client with interceptors
-chatService            - API abstraction with retry logic
-
-// Performance
-React.memo             - Prevent re-renders (Message component)
-useMemo                - Memoized values (5 components)
-useCallback            - Stable callbacks (hooks)
-```
-
-**Key Features:**
-- ✅ No React.FC (modern pattern)
-- ✅ Named imports only
-- ✅ Discriminated union types
-- ✅ Request cancellation (AbortController)
-- ✅ Error boundaries
-- ✅ Retry with exponential backoff
-
-### Backend Architecture
-
-**OOP Design with Dependency Injection:**
-
-```
-ServiceContainer (IoC/DI)
-├── AppConfig - Centralized configuration
-├── BilingualPromptFormatter (IPromptFormatter)
-│   └── Formats prompts with language hints
-└── OllamaModelService (IModelService)
-    ├── generateResponse(message, language)
-    ├── isHealthy()
-    └── getModelInfo()
-```
-
-**Interfaces:**
-```typescript
-interface IModelService {
-  generateResponse(message: string, language?: string): Promise<string>;
-  isHealthy(): Promise<boolean>;
-  getModelInfo(): Promise<ModelInfo>;
-}
-
-interface IPromptFormatter {
-  format(message: string, language?: string): string;
-}
-```
-
-**Benefits:**
-- ✅ Loose coupling via interfaces
-- ✅ Easy to swap implementations (Ollama → OpenAI)
-- ✅ Testable with mocks
-- ✅ SOLID principles
-- ✅ Clear dependency graph
 
 ### Data Flow
 
 ```
 User Input
     ↓
-useChatMessages (hook)
+Custom Hook (state + logic)
     ↓
-chatService.sendMessage(message, language)
+API Service Layer
     ↓
-POST /api/chat { message, language }
+Backend Route Handler
     ↓
-chat.ts route
+Service Container
     ↓
-ServiceContainer.modelService
+Model Service (via interface)
     ↓
-OllamaModelService.generateResponse()
+Prompt Formatter
     ↓
-BilingualPromptFormatter.format() → "Réponds en français: {message}"
+Ollama API
     ↓
-fetch('http://model:11434/api/generate')
-    ↓
-Ollama → Qwen2.5-3B
-    ↓
-Response → Backend → Frontend → UI
+Response back through chain
 ```
 
 ---
@@ -236,94 +129,66 @@ Response → Backend → Frontend → UI
 
 ### Makefile Commands
 
-**Services:**
 ```bash
 make help              # Show all commands
 make dev               # Start development
 make up                # Start production
-make down              # Stop all services
+make down              # Stop services
 make logs              # View logs
 make clean             # Clean Docker resources
-```
 
-**Model:**
-```bash
-make model-setup       # Pull Qwen2.5-3B
-make model-test        # Run tests
+# Model commands
+make model-setup       # Download model
+make model-test        # Test model
 make model-chat        # Interactive chat
 make model-list        # List models
-```
 
-**Frontend:**
-```bash
-make frontend-dev      # Local dev server
-make frontend-build    # Build for production
+# Development
+make frontend-dev      # Local frontend dev
+make frontend-build    # Build frontend
 make frontend-lint     # Lint code
-```
-
-**Builds:**
-```bash
-make build             # Build all services
-make build-frontend    # Build frontend only
-make build-backend     # Build backend only
 ```
 
 ### Docker Commands
 
-**Development:**
 ```bash
+# Development
 docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
-```
 
-**Production:**
-```bash
+# Production
 docker-compose up --build
-```
 
-**Logs:**
-```bash
-docker-compose logs -f                    # All services
-docker-compose logs -f backend            # Backend only
-docker logs simple-react-slm-model_model_1  # Model service
-```
+# Logs
+docker-compose logs -f
+docker-compose logs -f backend
 
-**Clean:**
-```bash
-docker-compose down -v                    # Stop + remove volumes
-docker system prune -a                    # Clean everything
+# Clean
+docker-compose down -v
+docker system prune -a
 ```
 
 ---
 
 ## API Endpoints
 
-### Chat API
+### Chat
 
 **POST** `/api/chat`
 
-Send a message to the model.
+Send message to model.
 
-**Request:**
 ```json
 {
-  "message": "What is Docker?",
+  "message": "Your question",
   "language": "en"  // Optional: "en" or "fr"
 }
 ```
 
-**Response (Success):**
+**Response:**
 ```json
 {
-  "message": "Docker is a platform for...",
+  "message": "AI response",
   "success": true
-}
-```
-
-**Response (Error):**
-```json
-{
-  "error": "Failed to process message",
-  "success": false
 }
 ```
 
@@ -331,14 +196,12 @@ Send a message to the model.
 
 **GET** `/api/health`
 
-Check backend and model availability.
+Check system status.
 
-**Response:**
 ```json
 {
   "status": "healthy",
   "timestamp": "2025-11-02T10:30:00.000Z",
-  "service": "simple-react-slm-backend",
   "model": {
     "available": true,
     "name": "qwen2.5:3b"
@@ -350,16 +213,14 @@ Check backend and model availability.
 
 **GET** `/api/model/info`
 
-Get information about the loaded model.
+Get model information.
 
-**Response:**
 ```json
 {
   "data": {
     "name": "qwen2.5:3b",
     "provider": "Ollama",
-    "status": "ready",
-    "version": "2025-11-02T10:00:00.000Z"
+    "status": "ready"
   },
   "success": true
 }
@@ -369,17 +230,17 @@ Get information about the loaded model.
 
 ## Environment Variables
 
-### Backend Configuration
+### Backend
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `PORT` | `3001` | Backend server port |
-| `NODE_ENV` | `development` | Environment (development/production) |
-| `FRONTEND_URL` | `http://localhost:3000` | Frontend URL for CORS |
-| `OLLAMA_URL` | `http://model:11434` | Ollama service URL |
-| `OLLAMA_MODEL` | `qwen2.5:3b` | Model name to use |
+| `PORT` | `3001` | Server port |
+| `NODE_ENV` | `development` | Environment mode |
+| `FRONTEND_URL` | `http://localhost:3000` | CORS origin |
+| `OLLAMA_URL` | `http://model:11434` | Model service URL |
+| `OLLAMA_MODEL` | `qwen2.5:3b` | Model name |
 
-### Frontend Configuration
+### Frontend
 
 | Variable | Default | Description |
 |----------|---------|-------------|
@@ -389,8 +250,7 @@ Get information about the loaded model.
 
 ## Additional Resources
 
-- [Model Setup Guide](./MODEL_SETUP.md) - Detailed Ollama configuration
-- [Integration Guide](./INTEGRATION.md) - Architecture and data flow
-- [Theme Architecture](./THEME_ARCHITECTURE.md) - Theme system details
+- [Model Setup Guide](./MODEL_SETUP.md)
+- [Integration Guide](./INTEGRATION.md)
+- [Theme Architecture](./THEME_ARCHITECTURE.md)
 - [Ollama Documentation](https://github.com/ollama/ollama)
-- [Qwen2.5 Model Card](https://huggingface.co/Qwen/Qwen2.5-3B-Instruct)

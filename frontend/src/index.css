@@ -32,23 +32,42 @@ body {
   min-height: 100vh;
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
+/* Custom scrollbar - Modern Theme */
+[data-theme="modern"] ::-webkit-scrollbar {
   width: 6px;
 }
 
-::-webkit-scrollbar-track {
+[data-theme="modern"] ::-webkit-scrollbar-track {
   background: #f1f5f9;
   border-radius: 3px;
 }
 
-::-webkit-scrollbar-thumb {
+[data-theme="modern"] ::-webkit-scrollbar-thumb {
   background: #cbd5e1;
   border-radius: 3px;
 }
 
-::-webkit-scrollbar-thumb:hover {
+[data-theme="modern"] ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+
+/* Custom scrollbar - Terminal Theme */
+[data-theme="terminal"] ::-webkit-scrollbar {
+  width: 8px;
+}
+
+[data-theme="terminal"] ::-webkit-scrollbar-track {
+  background: #000000;
+  border-left: 1px solid #00ff00;
+}
+
+[data-theme="terminal"] ::-webkit-scrollbar-thumb {
+  background: #003300;
+  border: 1px solid #00ff00;
+}
+
+[data-theme="terminal"] ::-webkit-scrollbar-thumb:hover {
+  background: #004d00;
 }
 
 /* Screen reader only class */

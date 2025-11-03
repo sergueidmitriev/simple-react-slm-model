@@ -1,11 +1,10 @@
-import { memo } from 'react';
 import { useThemedTranslation } from '../hooks/useThemedTranslation';
 
 interface ConnectionStatusProps {
   isConnected: boolean;
 }
 
-const ConnectionStatus = memo(({ isConnected }: ConnectionStatusProps) => {
+const ConnectionStatus = ({ isConnected }: ConnectionStatusProps) => {
   const { tt } = useThemedTranslation();
 
   return (
@@ -19,8 +18,6 @@ const ConnectionStatus = memo(({ isConnected }: ConnectionStatusProps) => {
       </div>
     </div>
   );
-});
-
-ConnectionStatus.displayName = 'ConnectionStatus';
+};
 
 export default ConnectionStatus;

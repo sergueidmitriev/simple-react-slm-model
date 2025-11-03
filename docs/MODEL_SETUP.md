@@ -1,21 +1,6 @@
 # Model Setup Guide
 
-**← [Back to README](../README.md)** | **[Integration Guide →](./INTEGRATION.md)**
-
----
-
-## Qwen2.5-3B with Ollama
-
-This project uses **Qwen2.5-3B-Instruct** - a small, bilingual (English/French) language model running via Ollama.
-
-### Model Specifications
-
-- **Name:** Qwen2.5-3B-Instruct
-- **Size:** ~1.8GB (3 billion parameters)
-- **Languages:** 29 languages including English and French
-- **Provider:** Alibaba (Qwen team)
-- **Format:** GGUF (optimized for CPU)
-- **API:** Ollama REST API on port 11434
+Guide for setting up and testing the AI model (Qwen2.5-3B via Ollama).
 
 ---
 
@@ -24,83 +9,74 @@ This project uses **Qwen2.5-3B-Instruct** - a small, bilingual (English/French) 
 ### 1. Start Services
 
 ```bash
-# Start all services including Ollama
 make dev
 ```
 
-This starts:
+Services running:
 - Frontend: http://localhost:3002
 - Backend: http://localhost:3001
-- **Ollama API: http://localhost:11434**
+- Ollama API: http://localhost:11434
 
 ### 2. Download Model
 
 ```bash
-# Pull the Qwen2.5-3B model (one-time setup)
 ./scripts/setup-model.sh
+# or
+make model-setup
 ```
 
-**Note:** First download takes ~5 minutes (1.8GB). Model is cached in Docker volume.
+**Note:** First download takes ~5 minutes (1.8GB). Model is cached.
 
 ### 3. Test Model
 
 ```bash
-# Run automated tests
 ./scripts/test-model.sh
+# or
+make model-test
 ```
 
 ### 4. Interactive Chat
 
 ```bash
-# Start interactive terminal chat
 ./scripts/interactive-model.sh
+# or
+make model-chat
 ```
 
 ---
 
 ## Manual Commands
 
-### Pull Model
 ```bash
-docker exec -it simple-react-slm-model-model-1 ollama pull qwen2.5:3b
-```
+# List installed models
+docker exec -it <container-name> ollama list
 
-### List Models
-```bash
-docker exec -it simple-react-slm-model-model-1 ollama list
-```
+# Pull specific model
+docker exec -it <container-name> ollama pull qwen2.5:3b
 
-### Interactive Chat
-```bash
-docker exec -it simple-react-slm-model-model-1 ollama run qwen2.5:3b
-```
+# Interactive chat
+docker exec -it <container-name> ollama run qwen2.5:3b
 
-### Single Question (English)
-```bash
-docker exec simple-react-slm-model-model-1 ollama run qwen2.5:3b "What is Docker?"
-```
-
-### Single Question (French)
-```bash
-docker exec simple-react-slm-model-model-1 ollama run qwen2.5:3b "Qu'est-ce que React?"
+# Single question
+docker exec <container-name> ollama run qwen2.5:3b "Your question"
 ```
 
 ---
 
 ## API Usage
 
-### REST API Example
+### Direct Ollama API
 
+**Single response:**
 ```bash
 curl http://localhost:11434/api/generate -d '{
   "model": "qwen2.5:3b",
-  "prompt": "Explain React in one sentence",
+  "prompt": "Explain Docker in one sentence",
   "stream": false
 }'
 ```
 
-### With Streaming
-
+**Streaming response:**
 ```bash
 curl http://localhost:11434/api/generate -d '{
   "model": "qwen2.5:3b",
@@ -109,60 +85,27 @@ curl http://localhost:11434/api/generate -d '{
 }'
 ```
 
-### Bilingual Example
+### Backend API
 
 ```bash
-# English
-curl http://localhost:11434/api/generate -d '{
-  "model": "qwen2.5:3b",
-  "prompt": "Answer in English: What is Node.js?",
-  "stream": false
-}'
-
-# French
-curl http://localhost:11434/api/generate -d '{
-  "model": "qwen2.5:3b",
-  "prompt": "Réponds en français: Qu'\''est-ce que Node.js?",
-  "stream": false
-}'
+curl http://localhost:3001/api/chat -X POST \
+  -H "Content-Type: application/json" \
+  -d '{"message": "What is Docker?", "language": "en"}'
 ```
 
 ---
 
-## Troubleshooting
+## Model Specifications
 
-### Model Not Found
-```bash
-# Pull it again
-docker exec -it simple-react-slm-model-model-1 ollama pull qwen2.5:3b
-```
-
-### Ollama Not Running
-```bash
-# Check if container is running
-docker ps | grep ollama
-
-# If not, start services
-make dev
-```
-
-### Clear Model Cache
-```bash
-# Remove model
-docker exec -it simple-react-slm-model-model-1 ollama rm qwen2.5:3b
-
-# Pull fresh copy
-docker exec -it simple-react-slm-model-model-1 ollama pull qwen2.5:3b
-```
-
-### Check Logs
-```bash
-docker logs simple-react-slm-model-model-1
-```
+- **Name:** Qwen2.5-3B-Instruct
+- **Size:** ~1.8GB (3 billion parameters)
+- **Languages:** Multilingual (29 languages including EN/FR)
+- **Provider:** Alibaba Cloud (Qwen team)
+- **Optimization:** GGUF format for CPU efficiency
 
 ---
 
-## Model Performance
+## Performance
 
 ### System Requirements
 
@@ -182,50 +125,64 @@ docker logs simple-react-slm-model-model-1
 - Complex questions: 3-7 seconds
 - Long responses: 5-10 seconds
 
-**Note:** GPU acceleration available if using NVIDIA GPU with Docker.
+**Note:** GPU acceleration available with NVIDIA Docker.
 
 ---
 
-## Next Steps
+## Troubleshooting
 
-After testing the model from command line:
+### Model Not Found
+```bash
+# Pull again
+docker exec -it <container-name> ollama pull qwen2.5:3b
+```
 
-1. **Integrate with Backend** - Update `backend/src/services/modelService.ts`
-2. **Connect to UI** - Wire up the chat interface
-3. **Add Language Detection** - Auto-detect user language
-4. **Implement Streaming** - Real-time response streaming
-5. **Add Context Memory** - Multi-turn conversations
+### Ollama Not Running
+```bash
+# Check container
+docker ps | grep ollama
 
-See the backend implementation guide for integration details.
+# Restart if needed
+make down && make dev
+```
+
+### Slow Responses
+```bash
+# Check resource usage
+docker stats
+
+# Consider smaller model
+docker exec <container-name> ollama pull qwen2.5:1.5b
+```
+
+### Clear Cache
+```bash
+# Remove model
+docker exec -it <container-name> ollama rm qwen2.5:3b
+
+# Re-download
+make model-setup
+```
 
 ---
 
 ## Alternative Models
 
-To use a different model:
-
 ```bash
-# Pull alternative model
-docker exec -it simple-react-slm-model-model-1 ollama pull <model-name>
-
-# Available options:
-# - phi3:mini (3.8B, better English)
-# - gemma:2b (2B, Google)
-# - tinyllama:1.1b (1.1B, fastest)
-# - qwen2:1.5b (1.5B, smaller)
+# Smaller/faster options
+ollama pull qwen2.5:1.5b      # 1.5B parameters
+ollama pull phi3:mini         # 3.8B parameters
+ollama pull gemma:2b          # 2B parameters
+ollama pull tinyllama:1.1b    # 1.1B parameters (fastest)
 ```
 
-Update the model name in your backend code accordingly.
+Update backend environment variable to use different model.
 
 ---
 
 ## Resources
 
 - [Ollama Documentation](https://github.com/ollama/ollama)
-- [Qwen2.5 Model Card](https://huggingface.co/Qwen/Qwen2.5-3B-Instruct)
 - [Ollama API Reference](https://github.com/ollama/ollama/blob/main/docs/api.md)
 - [Available Models](https://ollama.com/library)
-
----
-
-**← [Back to README](../README.md)** | **[Integration Guide →](./INTEGRATION.md)** | **[Theme Architecture →](./THEME_ARCHITECTURE.md)**
+- [Qwen2.5 Model Card](https://huggingface.co/Qwen/Qwen2.5-3B-Instruct)

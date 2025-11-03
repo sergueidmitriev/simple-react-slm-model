@@ -1,299 +1,208 @@
-# Theme Architecture Documentation
-
-## Overview
 # Theme Architecture
 
-**← [Back to README](../README.md)** | **[Model Setup →](../MODEL_SETUP.md)** | **[Integration Guide →](../INTEGRATION.md)**
+Theme system design and implementation overview.
 
 ---
 
-This document describes the theme system implementation in the Simple React SLM Model application. The system provides a clean separation of concerns between styling and component logic.
+## Design Pattern
 
-## Architecture Pattern: Preferences Context + CSS Variables
+**Context + CSS Variables**
 
-### Key Principles
-1. **Complete separation of styling from components** - All styling logic is in CSS files
-2. **No prop drilling** - Theme state managed via Preferences Context
-3. **Semantic class names** - Components use descriptive CSS classes
-4. **CSS Custom Properties** - Dynamic theming through CSS variables
-5. **LocalStorage persistence** - All preferences (theme, language, streaming) saved across sessions
+- Theme state managed via React Context
+- All styling in CSS files (no inline styles)
+- CSS custom properties for dynamic theming
+- LocalStorage persistence
 
-## File Structure
+---
 
-```
-frontend/src/
-├── contexts/
-│   ├── PreferencesContext.tsx  # Global preferences state (theme, language, streaming)
-│   └── ThemeContext.tsx        # Theme hook (wrapper around PreferencesContext)
-├── styles/
-│   └── theme.css               # All theme-specific styles
-├── types/
-│   ├── theme.ts                # Theme enum definition
-│   ├── language.ts             # Language enum definition
-│   └── preferences.ts          # Preferences interface
-├── utils/
-│   └── preferences.ts          # LocalStorage utilities
-└── components/
-    ├── Chat.tsx                # No theme prop drilling
-    ├── ChatContainer.tsx       # Uses .chat-container class
-    ├── ChatHeader.tsx          # Uses .chat-header class
-    ├── ThemeToggle.tsx         # Uses .theme-toggle class
-    ├── ConnectionStatus.tsx    # Uses .status-indicator class
-    ├── MessageList.tsx         # Uses .message-list class
-    ├── MessageInput.tsx        # Uses .chat-input class
-    └── Message.tsx             # Uses .message-bubble class
-```
+## Key Principles
 
-## Implementation Details
+1. **Separation of concerns** - Styling separate from components
+2. **No prop drilling** - Context provides theme globally
+3. **Semantic classes** - Descriptive CSS class names
+4. **CSS custom properties** - Dynamic theme switching
+5. **Persistence** - Theme saved across sessions
 
-### 1. Preferences Context (`PreferencesContext.tsx`)
+---
 
-Provides global preferences state (theme, language, streaming) without prop drilling:
+## Implementation
+
+### Theme Context
+
+Provides global theme state without prop drilling:
 
 ```typescript
-interface Preferences {
-  language: Language;
-  theme: Theme;
-  streaming: boolean;
-}
-
-interface PreferencesContextValue {
-  preferences: Preferences;
-  updatePreferences: (updates: Partial<Preferences>) => void;
-  resetPreferences: () => void;
+interface ThemeContextValue {
+  theme: Theme;          // Current theme
+  setTheme: (theme) => void;
+  toggleTheme: () => void;
 }
 ```
 
-Features:
-- React Context API for state management
-- `usePreferences()` custom hook for consuming context
-- LocalStorage integration for persistence
-- Automatic `data-theme` attribute on document root for theme changes
-- Type-safe with enum values
+**Features:**
+- React Context for state management
+- `useTheme()` hook for components
+- LocalStorage integration
+- Automatic `data-theme` attribute on root element
 
-### 2. CSS Variables (`theme.css`)
+### CSS Variables
 
-Two complete theme definitions:
+Two theme definitions in CSS:
 
 **Modern Theme** (`[data-theme="modern"]`)
-- Light blue/indigo color scheme
-- Rounded corners (1rem border-radius)
-- Gradient backgrounds
-- Sans-serif fonts
+- Light colors with gradients
+- Rounded corners
 - Soft shadows
+- Sans-serif fonts
 
 **Terminal Theme** (`[data-theme="terminal"]`)
-- Black background with green text
-- Zero border-radius (square corners)
+- Black background, green text
+- Square corners
 - Monospace fonts
-- Green borders and glow effects
 - Retro command-line aesthetic
 
-### 3. Component Classes
+### Component Styling
 
-Components use semantic CSS classes that automatically adapt to the current theme:
+Components use semantic CSS classes that adapt automatically:
 
-- `.chat-container` - Main app container with gradient/black background
-- `.chat-box` - Chat window with rounded/square styling
-- `.chat-header` - Header with gradient/bordered styling
-- `.chat-input` - Input field with theme-aware styling
-- `.chat-button` - Send button with theme colors
-- `.message-bubble.user` - User message styling
-- `.message-bubble.assistant` - Assistant message styling
-- `.theme-toggle` - Toggle switch component
-- `.status-indicator` - Connection status display
-- `.empty-state` - Empty conversation state
+- `.chat-container` - Main container
+- `.chat-box` - Chat window
+- `.chat-header` - Header section
+- `.chat-input` - Input field
+- `.chat-button` - Action buttons
+- `.message-bubble` - Message display
+- `.status-indicator` - Connection status
 - `.loading-indicator` - Loading animation
-- `.error-message` - Error display
 
-## Usage in Components
+---
 
-### Before (with prop drilling and inline conditionals):
+## Usage Example
+
+**Before (prop drilling + inline styles):**
 ```typescript
-interface MessageProps {
-  message: Message;
-  theme: Theme;  // ❌ Prop drilling
-}
-
-const MessageComponent: React.FC<MessageProps> = ({ message, theme }) => {
-  const isUser = message.role === 'user';
+const Message = ({ message, theme }) => {
+  const styles = theme === Theme.Terminal 
+    ? 'bg-black border-green text-green font-mono'
+    : 'bg-white rounded shadow';
   
-  // ❌ Inline conditional styling logic - using old utility functions
-  const bubbleStyles = isUser
-    ? (theme === Theme.Terminal 
-        ? 'bg-green-950 border-2 border-green-500 text-green-400 font-mono'
-        : 'bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-2xl')
-    : (theme === Theme.Terminal
-        ? 'bg-black border-2 border-green-600 text-green-500 font-mono'
-        : 'bg-white text-gray-800 border border-gray-200 rounded-2xl');
+  return <div className={styles}>{message.content}</div>;
+};
+```
 
+**After (CSS classes only):**
+```typescript
+const Message = ({ message }) => {
+  const isUser = message.role === 'user';
   return (
-    <div className={`max-w-xs px-4 py-3 ${bubbleStyles}`}>
+    <div className={`message-bubble ${isUser ? 'user' : 'assistant'}`}>
       {message.content}
     </div>
   );
 };
 ```
 
-### After (with CSS classes):
+**Using theme for logic (not styling):**
 ```typescript
-interface MessageProps {
-  message: Message;  // ✅ No theme prop needed
-}
-
-const MessageComponent: React.FC<MessageProps> = ({ message }) => {
-  const isUser = message.role === 'user';
-
-  // ✅ Simple semantic classes
-  return (
-    <div className={`message-bubble ${isUser ? 'user' : 'assistant'}`}>
-      <p className="text-sm leading-relaxed whitespace-pre-wrap">
-        {message.content}
-      </p>
-      <p className="message-timestamp">
-        {message.timestamp.toLocaleTimeString()}
-      </p>
-    </div>
-  );
-};
-```
-
-### Using the Theme Hook:
-```typescript
-import { useTheme } from '../contexts/ThemeContext';
-
-const MyComponent = () => {
-  const { theme, toggleTheme } = useTheme();
+const Header = () => {
+  const { theme } = useTheme();
   
-  // Use theme value for logic (not styling)
+  // Theme affects content, not styling
   const title = theme === Theme.Terminal 
     ? '> TERMINAL_MODE' 
     : 'Modern Interface';
   
-  return (
-    <div className="my-component">  {/* CSS handles styling */}
-      <h1>{title}</h1>
-      <button onClick={toggleTheme}>Toggle Theme</button>
-    </div>
-  );
+  return <h1 className="chat-header">{title}</h1>;
 };
 ```
 
-### Using the Preferences Hook:
-```typescript
-import { usePreferences } from '../contexts/PreferencesContext';
-import { Theme } from '../types';
-
-const MyComponent = () => {
-  const { preferences, updatePreferences } = usePreferences();
-  
-  // Access any preference
-  const { theme, language, streaming } = preferences;
-  
-  // Update preferences
-  const handleThemeChange = () => {
-    updatePreferences({ 
-      theme: theme === Theme.Modern ? Theme.Terminal : Theme.Modern 
-    });
-  };
-  
-  return (
-    <div className="my-component">
-      <button onClick={handleThemeChange}>Toggle Theme</button>
-    </div>
-  );
-};
-```
+---
 
 ## Benefits
 
-### 1. **Maintainability**
-- All styling in one place (`theme.css`)
-- Changes don't require touching component files
+### Maintainability
+- All styling in one place
+- Changes don't require component edits
 - Easy to add new themes
 
-### 2. **Performance**
-- CSS handles theme switching (no re-renders for styling)
-- Browser optimizes CSS custom properties
+### Performance
+- CSS handles theme switching (no re-renders)
+- Browser optimizes CSS variables
 - Smaller component bundle size
 
-### 3. **Developer Experience**
-- No prop drilling through component tree
-- Clean, readable component code
+### Developer Experience
+- No prop drilling
+- Clean component code
 - Clear separation of concerns
-- TypeScript type safety maintained
+- TypeScript type safety
 
-### 4. **User Experience**
-- Instant theme switching via CSS
-- All preferences persist across sessions (theme, language, streaming)
-- Smooth transitions between themes
-- Single source of truth for all user settings
+### User Experience
+- Instant theme switching
+- Theme persists across sessions
+- Smooth transitions
 
-## Adding a New Theme
+---
 
-To add a new theme (e.g., "dark" mode):
+## Adding New Themes
 
-1. **Add to Theme enum** (`types/theme.ts`):
+To add a new theme (e.g., "dark"):
+
+1. **Add to enum:**
 ```typescript
 export enum Theme {
   Modern = 'modern',
   Terminal = 'terminal',
-  Dark = 'dark',  // New theme
+  Dark = 'dark',  // New
 }
 ```
 
-2. **Define CSS variables** (`styles/theme.css`):
+2. **Define CSS:**
 ```css
 [data-theme="dark"] {
   --color-bg-primary: #1a1a1a;
   --color-text-primary: #e5e5e5;
   --color-accent: #8b5cf6;
-  --border-radius: 0.5rem;
-  /* ... etc */
+  /* ... other variables */
 }
 
-/* Define component-specific overrides if needed */
 [data-theme="dark"] .chat-box {
   background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
-  box-shadow: 0 20px 50px rgba(139, 92, 246, 0.2);
 }
 ```
 
-3. **No component changes needed!** The existing components automatically use the new theme.
+3. **No component changes needed!**
+
+---
 
 ## Testing
 
-To test themes:
-1. Open http://localhost:3002 (development) or http://localhost:3000 (production)
-2. Click the "Switch style" toggle
-3. Verify both themes render correctly
-4. Refresh the page - theme should persist
-5. Check browser DevTools: `data-theme` attribute on `<html>` element
-6. Inspect CSS variables in browser DevTools
+```bash
+# Start application
+make dev
 
-## Migration Notes
+# Open browser
+open http://localhost:3002
 
-### Files Changed
-- ✅ Removed theme props from all component interfaces
-- ✅ Removed `/frontend/src/utils/themeStyles.ts` (deprecated - no longer needed)
-- ✅ Created `/frontend/src/contexts/PreferencesContext.tsx` (manages all preferences)
-- ✅ Updated `/frontend/src/contexts/ThemeContext.tsx` (now uses PreferencesContext)
-- ✅ Created `/frontend/src/styles/theme.css`
-- ✅ Updated all 8 components to use CSS classes
-- ✅ Wrapped `App` with `PreferencesProvider` in `main.tsx`
-- ✅ Created `/frontend/src/types/preferences.ts` and `/frontend/src/types/language.ts`
-- ✅ Created `/frontend/src/utils/preferences.ts` for localStorage management
+# Test:
+# 1. Toggle theme button
+# 2. Verify both themes render correctly
+# 3. Refresh page - theme should persist
+# 4. Check DevTools: data-theme attribute on <html>
+```
 
-### Breaking Changes
-None - this is an internal refactoring. The UI and functionality remain identical.
+---
 
 ## Future Enhancements
 
-Possible improvements:
-- Add more themes (high contrast, sepia, etc.)
-- Add theme transition animations
-- Support user-customizable colors
-- Add dark mode auto-detection from system preferences
-- Add per-component theme overrides
-- Add more user preferences (font size, animation speed, etc.)
-- Sync preferences across devices via backend API
+- Additional themes (high contrast, sepia, etc.)
+- Theme transition animations
+- User-customizable colors
+- System preference auto-detection
+- Per-component theme overrides
+
+---
+
+## Resources
+
+- [CSS Custom Properties (MDN)](https://developer.mozilla.org/en-US/docs/Web/CSS/--*)
+- [React Context API](https://react.dev/reference/react/useContext)
+- [LocalStorage API](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)

@@ -1,10 +1,10 @@
-import { ReactNode, memo } from 'react';
+import { ReactNode } from 'react';
 
 interface ChatContainerProps {
   children: ReactNode;
 }
 
-const ChatContainer = memo(({ children }: ChatContainerProps) => {
+const ChatContainer = ({ children }: ChatContainerProps) => {
   return (
     <div className="chat-container">
       <div className="chat-box">
@@ -12,8 +12,6 @@ const ChatContainer = memo(({ children }: ChatContainerProps) => {
       </div>
     </div>
   );
-});
-
-ChatContainer.displayName = 'ChatContainer';
+};
 
 export default ChatContainer;

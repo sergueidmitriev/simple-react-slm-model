@@ -1,4 +1,4 @@
-import { ReactNode, useState, useRef } from 'react';
+import { ReactNode, useState, useRef, memo } from 'react';
 
 type SettingControlType = 'select' | 'number' | 'toggle' | 'custom';
 
@@ -45,7 +45,7 @@ type SettingRowProps =
  * Compact spreadsheet-style setting row component
  * Renders a two-column layout: Label | Control
  */
-const SettingRow = (props: SettingRowProps) => {
+const SettingRow = memo((props: SettingRowProps) => {
   const { label, type, tooltip } = props;
   const [showTooltip, setShowTooltip] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
@@ -154,6 +154,8 @@ const SettingRow = (props: SettingRowProps) => {
       <div className="setting-row-control">{renderControl()}</div>
     </div>
   );
-};
+});
+
+SettingRow.displayName = 'SettingRow';
 
 export default SettingRow;

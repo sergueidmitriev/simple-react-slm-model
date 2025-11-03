@@ -1,6 +1,4 @@
-import { useTranslation } from 'react-i18next';
-import { useTheme } from '../contexts/ThemeContext';
-import { Theme } from '../types';
+import { useThemedTranslation } from '../hooks/useThemedTranslation';
 import { SendIcon, AlertIcon } from './icons';
 
 interface MessageInputProps {
@@ -24,28 +22,7 @@ const MessageInput = ({
   onSubmit,
   onCancel,
 }: MessageInputProps) => {
-  const { t } = useTranslation();
-  const { theme } = useTheme();
-
-  const placeholder = theme === Theme.Terminal 
-    ? t('chat.inputPlaceholderTerminal') 
-    : t('chat.inputPlaceholder');
-
-  const buttonText = theme === Theme.Terminal 
-    ? t('chat.sendButtonTerminal')
-    : (isLoading ? t('chat.sending') : t('chat.sendButton'));
-
-  const errorMessage = theme === Theme.Terminal 
-    ? t('errors.connectionLostTerminal')
-    : t('errors.connectionLost');
-
-  const cancelButtonText = theme === Theme.Terminal 
-    ? t('chat.cancelButtonTerminal')
-    : t('chat.cancelButton');
-
-  const cancelledMessage = theme === Theme.Terminal 
-    ? t('chat.requestCancelledTerminal')
-    : t('chat.requestCancelled');
+  const { tt } = useThemedTranslation();
 
   return (
     <div className="message-input-container">
@@ -56,7 +33,7 @@ const MessageInput = ({
             type="text"
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            placeholder={placeholder}
+            placeholder={tt('chat.inputPlaceholder')}
             className="chat-input"
             disabled={isLoading || !isConnected}
           />
@@ -76,7 +53,7 @@ const MessageInput = ({
             className="chat-button-cancel"
           >
             <span>✕</span>
-            <span>{cancelButtonText}</span>
+            <span>{tt('chat.cancelButton')}</span>
           </button>
         ) : (
           <button
@@ -85,7 +62,7 @@ const MessageInput = ({
             className="chat-button"
           >
             <SendIcon />
-            <span>{buttonText}</span>
+            <span>{isLoading ? tt('chat.sending') : tt('chat.sendButton')}</span>
           </button>
         )}
       </form>
@@ -94,7 +71,7 @@ const MessageInput = ({
         <div className="error-message">
           <AlertIcon className="w-4 h-4 text-red-500" />
           <span className="text-sm">
-            {errorMessage}
+            {tt('errors.connectionLost')}
           </span>
         </div>
       )}
@@ -102,7 +79,7 @@ const MessageInput = ({
       {isCancelled && (
         <div className="cancel-message">
           <span className="text-sm">
-            {cancelledMessage}
+            {tt('chat.requestCancelled')}
           </span>
         </div>
       )}

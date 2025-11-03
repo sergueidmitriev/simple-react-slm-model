@@ -1,7 +1,5 @@
 import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useTheme } from '../contexts/ThemeContext';
-import { Theme } from '../types';
+import { useThemedTranslation } from '../hooks/useThemedTranslation';
 import ConnectionStatus from './ConnectionStatus';
 import SettingsModal from './SettingsModal';
 
@@ -10,27 +8,18 @@ interface ChatHeaderProps {
 }
 
 const ChatHeader = ({ isConnected }: ChatHeaderProps) => {
-  const { theme } = useTheme();
-  const { t } = useTranslation();
+  const { tt } = useThemedTranslation();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  
-  const title = theme === Theme.Terminal 
-    ? t('header.titleTerminal') 
-    : t('header.title');
-
-  const subtitle = theme === Theme.Terminal 
-    ? t('header.subtitleTerminal') 
-    : t('header.subtitle');
 
   return (
     <div className="chat-header">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold">
-            {title}
+            {tt('header.title')}
           </h1>
           <p className="text-sm mt-1 opacity-90">
-            {subtitle}
+            {tt('header.subtitle')}
           </p>
         </div>
         <div className="flex items-center gap-4">
@@ -38,7 +27,7 @@ const ChatHeader = ({ isConnected }: ChatHeaderProps) => {
           <button
             onClick={() => setIsSettingsOpen(true)}
             className="settings-button"
-            aria-label={t('header.settings')}
+            aria-label={tt('header.settings')}
           >
             ⚙️
           </button>

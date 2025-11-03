@@ -1,4 +1,4 @@
-import { ReactNode, useEffect } from 'react';
+import { ReactNode, useEffect, memo } from 'react';
 import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 
@@ -14,7 +14,7 @@ interface ModalProps {
  * Generic modal component with backdrop and centered dialog
  * Uses React Portal to render at the root level
  */
-const Modal = ({ isOpen, onClose, title, children, footer }: ModalProps) => {
+const Modal = memo(({ isOpen, onClose, title, children, footer }: ModalProps) => {
   const { t } = useTranslation();
 
   // Prevent body scroll when modal is open
@@ -63,6 +63,8 @@ const Modal = ({ isOpen, onClose, title, children, footer }: ModalProps) => {
   );
 
   return createPortal(modalContent, document.body);
-};
+});
+
+Modal.displayName = 'Modal';
 
 export default Modal;

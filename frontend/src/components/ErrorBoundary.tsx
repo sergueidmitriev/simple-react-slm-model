@@ -1,12 +1,12 @@
-import { Component, ReactNode } from 'react';
+import { Component, ReactNode, ErrorInfo } from 'react';
 import { ErrorIcon } from './icons';
 
-interface Props {
+interface ErrorBoundaryProps {
   children: ReactNode;
   fallback?: ReactNode;
 }
 
-interface State {
+interface ErrorBoundaryState {
   hasError: boolean;
   error?: Error;
 }
@@ -15,17 +15,17 @@ interface State {
  * Error Boundary component to catch React errors
  * Prevents the entire app from crashing due to component errors
  */
-class ErrorBoundary extends Component<Props, State> {
-  constructor(props: Props) {
+class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
     super(props);
     this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError(error: Error): State {
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo): void {
+  componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     console.error('ErrorBoundary caught an error:', error, errorInfo);
   }
 

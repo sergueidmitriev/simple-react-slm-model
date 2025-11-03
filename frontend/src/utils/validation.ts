@@ -46,7 +46,7 @@ export const validateModelParameters = (params: {
   temperature: number;
   topP: number;
   topK: number;
-}) => {
+}): { temperature: number; topP: number; topK: number } => {
   return {
     temperature: validateTemperature(params.temperature),
     topP: validateTopP(params.topP),

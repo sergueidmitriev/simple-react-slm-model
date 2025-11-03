@@ -1,11 +1,9 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../contexts/ThemeContext';
 import { Theme } from '../types';
-import ThemeToggle from './ThemeToggle';
-import { StreamingToggle } from './StreamingToggle';
 import ConnectionStatus from './ConnectionStatus';
-import LanguageToggle from './LanguageToggle';
+import SettingsModal from './SettingsModal';
 
 interface ChatHeaderProps {
   isConnected: boolean;
@@ -14,6 +12,7 @@ interface ChatHeaderProps {
 const ChatHeader = ({ isConnected }: ChatHeaderProps) => {
   const { theme } = useTheme();
   const { t } = useTranslation();
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   
   // Memoize title and subtitle to prevent recalculation
   const title = useMemo(
@@ -37,17 +36,22 @@ const ChatHeader = ({ isConnected }: ChatHeaderProps) => {
             {subtitle}
           </p>
         </div>
-        <div className="flex items-center space-x-4">
-          <div className="flex flex-col gap-2">
-            <ThemeToggle />
-            <StreamingToggle disabled={!isConnected} />
-          </div>
-          <div className="flex flex-col gap-2 items-end">
-            <ConnectionStatus isConnected={isConnected} />
-            <LanguageToggle />
-          </div>
+        <div className="flex items-center gap-4">
+          <ConnectionStatus isConnected={isConnected} />
+          <button
+            onClick={() => setIsSettingsOpen(true)}
+            className="settings-button"
+            aria-label={t('header.settings')}
+          >
+            ⚙️
+          </button>
         </div>
       </div>
+      
+      <SettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+      />
     </div>
   );
 };

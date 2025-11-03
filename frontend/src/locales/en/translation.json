@@ -3,7 +3,8 @@
     "title": "SLM Chat Assistant",
     "titleTerminal": "> SLM_TERMINAL",
     "subtitle": "Powered by Small Language Model",
-    "subtitleTerminal": "SYSTEM v1.0.0 READY"
+    "subtitleTerminal": "SYSTEM v1.0.0 READY",
+    "settings": "Settings"
   },
   "theme": {
     "switchStyle": "Switch style",
@@ -54,5 +55,29 @@
     "switch": "Language",
     "english": "English",
     "french": "Français"
+  },
+  "settings": {
+    "title": "Settings",
+    "close": "Close settings",
+    "save": "Save",
+    "cancel": "Cancel",
+    "language": {
+      "label": "Language",
+      "description": "Choose your preferred language for the interface",
+      "english": "English",
+      "french": "Français"
+    },
+    "theme": {
+      "label": "Theme",
+      "description": "Select the visual style of the application",
+      "modern": "Modern",
+      "terminal": "Terminal"
+    },
+    "streaming": {
+      "label": "Response Mode",
+      "description": "Enable streaming for real-time responses or wait for complete messages",
+      "enabled": "Streaming (Real-time)",
+      "disabled": "Complete (Wait for full response)"
+    }
   }
 }

@@ -68,3 +68,9 @@ This is a sample project with React web UI connecting to a Small Language Model 
 - SLM model
 
 
+## Coding Style
+- Do not use React.FC
+- Do not use "function" for components, use arrow functions instead
+- Use modern best practices for React apps
+
+

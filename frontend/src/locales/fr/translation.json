@@ -3,7 +3,8 @@
     "title": "Assistant de Chat SLM",
     "titleTerminal": "> TERMINAL_SLM",
     "subtitle": "Propulsé par un petit modèle de langage",
-    "subtitleTerminal": "SYSTÈME v1.0.0 PRÊT"
+    "subtitleTerminal": "SYSTÈME v1.0.0 PRÊT",
+    "settings": "Paramètres"
   },
   "theme": {
     "switchStyle": "Changer de style",
@@ -54,5 +55,29 @@
     "switch": "Langue",
     "english": "English",
     "french": "Français"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "close": "Fermer les paramètres",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "language": {
+      "label": "Langue",
+      "description": "Choisissez votre langue préférée pour l'interface",
+      "english": "English",
+      "french": "Français"
+    },
+    "theme": {
+      "label": "Thème",
+      "description": "Sélectionnez le style visuel de l'application",
+      "modern": "Moderne",
+      "terminal": "Terminal"
+    },
+    "streaming": {
+      "label": "Mode de réponse",
+      "description": "Activez le streaming pour des réponses en temps réel ou attendez les messages complets",
+      "enabled": "Streaming (Temps réel)",
+      "disabled": "Complet (Attendre la réponse complète)"
+    }
   }
 }

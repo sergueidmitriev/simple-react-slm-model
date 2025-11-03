@@ -2,8 +2,9 @@
 
 A proof-of-concept React application demonstrating clean architecture patterns with a bilingual AI chat interface.
 
-![Light Theme](./docs/assets/chat-light.png)
-![Terminal Theme](./docs/assets/chat-terminal.png)
+![Modern Theme](./docs/assets/SLM_chat.png)
+![Terminal Theme](./docs/assets/SLM_chat_terminal.png)
+![Settings Modal](./docs/assets/SLM_chat_settings.png)
 
 ## ✨ Key Features
 

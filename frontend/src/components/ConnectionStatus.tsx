@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../contexts/ThemeContext';
 import { Theme } from '../types';
@@ -11,20 +10,13 @@ const ConnectionStatus = ({ isConnected }: ConnectionStatusProps) => {
   const { theme } = useTheme();
   const { t } = useTranslation();
   
-  // Memoize computed strings
-  const tooltipText = useMemo(
-    () => isConnected 
-      ? t('status.connectedTooltip')
-      : t('status.disconnectedTooltip'),
-    [isConnected, t]
-  );
+  const tooltipText = isConnected 
+    ? t('status.connectedTooltip')
+    : t('status.disconnectedTooltip');
 
-  const statusText = useMemo(
-    () => isConnected 
-      ? (theme === Theme.Terminal ? t('status.onlineTerminal') : t('status.online'))
-      : t('status.offline'),
-    [isConnected, theme, t]
-  );
+  const statusText = isConnected 
+    ? (theme === Theme.Terminal ? t('status.onlineTerminal') : t('status.online'))
+    : t('status.offline');
 
   return (
     <div className="status-indicator tooltip-trigger">

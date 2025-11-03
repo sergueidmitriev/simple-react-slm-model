@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../contexts/ThemeContext';
 import { Theme } from '../types';
@@ -14,16 +14,13 @@ const ChatHeader = ({ isConnected }: ChatHeaderProps) => {
   const { t } = useTranslation();
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   
-  // Memoize title and subtitle to prevent recalculation
-  const title = useMemo(
-    () => theme === Theme.Terminal ? t('header.titleTerminal') : t('header.title'),
-    [theme, t]
-  );
+  const title = theme === Theme.Terminal 
+    ? t('header.titleTerminal') 
+    : t('header.title');
 
-  const subtitle = useMemo(
-    () => theme === Theme.Terminal ? t('header.subtitleTerminal') : t('header.subtitle'),
-    [theme, t]
-  );
+  const subtitle = theme === Theme.Terminal 
+    ? t('header.subtitleTerminal') 
+    : t('header.subtitle');
 
   return (
     <div className="chat-header">

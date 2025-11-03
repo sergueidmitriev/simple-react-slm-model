@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from '../contexts/ThemeContext';
 import { Theme } from '../types';
@@ -28,39 +27,25 @@ const MessageInput = ({
   const { t } = useTranslation();
   const { theme } = useTheme();
 
-  // Memoize computed strings to prevent recalculation
-  const placeholder = useMemo(
-    () => theme === Theme.Terminal ? t('chat.inputPlaceholderTerminal') : t('chat.inputPlaceholder'),
-    [theme, t]
-  );
+  const placeholder = theme === Theme.Terminal 
+    ? t('chat.inputPlaceholderTerminal') 
+    : t('chat.inputPlaceholder');
 
-  const buttonText = useMemo(
-    () => theme === Theme.Terminal 
-      ? t('chat.sendButtonTerminal')
-      : (isLoading ? t('chat.sending') : t('chat.sendButton')),
-    [theme, isLoading, t]
-  );
+  const buttonText = theme === Theme.Terminal 
+    ? t('chat.sendButtonTerminal')
+    : (isLoading ? t('chat.sending') : t('chat.sendButton'));
 
-  const errorMessage = useMemo(
-    () => theme === Theme.Terminal 
-      ? t('errors.connectionLostTerminal')
-      : t('errors.connectionLost'),
-    [theme, t]
-  );
+  const errorMessage = theme === Theme.Terminal 
+    ? t('errors.connectionLostTerminal')
+    : t('errors.connectionLost');
 
-  const cancelButtonText = useMemo(
-    () => theme === Theme.Terminal 
-      ? t('chat.cancelButtonTerminal')
-      : t('chat.cancelButton'),
-    [theme, t]
-  );
+  const cancelButtonText = theme === Theme.Terminal 
+    ? t('chat.cancelButtonTerminal')
+    : t('chat.cancelButton');
 
-  const cancelledMessage = useMemo(
-    () => theme === Theme.Terminal 
-      ? t('chat.requestCancelledTerminal')
-      : t('chat.requestCancelled'),
-    [theme, t]
-  );
+  const cancelledMessage = theme === Theme.Terminal 
+    ? t('chat.requestCancelledTerminal')
+    : t('chat.requestCancelled');
 
   return (
     <div className="message-input-container">

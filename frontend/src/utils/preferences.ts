@@ -33,6 +33,9 @@ export const loadPreferences = (): Preferences => {
       language: isValidLanguage(parsed.language) ? parsed.language : DEFAULT_PREFERENCES.language,
       theme: isValidTheme(parsed.theme) ? parsed.theme : DEFAULT_PREFERENCES.theme,
       streaming: typeof parsed.streaming === 'boolean' ? parsed.streaming : DEFAULT_PREFERENCES.streaming,
+      temperature: typeof parsed.temperature === 'number' ? parsed.temperature : DEFAULT_PREFERENCES.temperature,
+      topP: typeof parsed.topP === 'number' ? parsed.topP : DEFAULT_PREFERENCES.topP,
+      topK: typeof parsed.topK === 'number' ? parsed.topK : DEFAULT_PREFERENCES.topK,
     };
   } catch (error) {
     console.error('Failed to load preferences from localStorage:', error);

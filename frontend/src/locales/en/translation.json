@@ -61,6 +61,10 @@
     "close": "Close settings",
     "save": "Save",
     "cancel": "Cancel",
+    "sections": {
+      "ui": "Interface",
+      "model": "Model Parameters"
+    },
     "language": {
       "label": "Language",
       "description": "Choose your preferred language for the interface",
@@ -74,10 +78,24 @@
       "terminal": "Terminal"
     },
     "streaming": {
-      "label": "Response Mode",
+      "label": "Streaming",
       "description": "Enable streaming for real-time responses or wait for complete messages",
       "enabled": "Streaming (Real-time)",
       "disabled": "Complete (Wait for full response)"
+    },
+    "model": {
+      "temperature": {
+        "label": "Temperature",
+        "description": "Controls randomness (0=deterministic, 2=very creative)"
+      },
+      "topP": {
+        "label": "Top P",
+        "description": "Nucleus sampling threshold (lower=more focused)"
+      },
+      "topK": {
+        "label": "Top K",
+        "description": "Limits token selection pool (lower=more focused)"
+      }
     }
   }
 }

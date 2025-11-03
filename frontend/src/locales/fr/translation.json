@@ -61,6 +61,10 @@
     "close": "Fermer les paramètres",
     "save": "Enregistrer",
     "cancel": "Annuler",
+    "sections": {
+      "ui": "Interface",
+      "model": "Paramètres du Modèle"
+    },
     "language": {
       "label": "Langue",
       "description": "Choisissez votre langue préférée pour l'interface",
@@ -74,10 +78,24 @@
       "terminal": "Terminal"
     },
     "streaming": {
-      "label": "Mode de réponse",
+      "label": "Streaming",
       "description": "Activez le streaming pour des réponses en temps réel ou attendez les messages complets",
       "enabled": "Streaming (Temps réel)",
       "disabled": "Complet (Attendre la réponse complète)"
+    },
+    "model": {
+      "temperature": {
+        "label": "Température",
+        "description": "Contrôle l'aléatoire (0=déterministe, 2=très créatif)"
+      },
+      "topP": {
+        "label": "Top P",
+        "description": "Seuil d'échantillonnage du noyau (plus bas=plus ciblé)"
+      },
+      "topK": {
+        "label": "Top K",
+        "description": "Limite le pool de sélection de jetons (plus bas=plus ciblé)"
+      }
     }
   }
 }

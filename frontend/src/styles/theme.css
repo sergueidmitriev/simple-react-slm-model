@@ -920,14 +920,14 @@ body {
   position: fixed;
   inset: 0;
   background-color: rgba(0, 0, 0, 0.5);
-  z-index: 9998;
+  z-index: 10000;
   animation: fadeIn 0.2s ease-in-out;
 }
 
 .modal-container {
   position: fixed;
   inset: 0;
-  z-index: 9999;
+  z-index: 10001;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1283,5 +1283,176 @@ body {
 
 .settings-button:focus {
   box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+}
+
+/* Compact Settings Table */
+.settings-table {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.setting-row {
+  display: grid;
+  grid-template-columns: 10rem 1fr;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.setting-row:last-child {
+  border-bottom: none;
+}
+
+.setting-row-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  white-space: nowrap;
+}
+
+[data-theme="terminal"] .setting-row-label {
+  font-family: var(--font-mono);
+  color: #4ade80;
+}
+
+.setting-row-control {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.setting-control {
+  width: 100%;
+}
+
+.setting-control.setting-select,
+.setting-control.setting-number {
+  padding: 0.5rem 0.75rem;
+  border: var(--border-width) solid var(--color-border);
+  border-radius: 0.375rem;
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  font-size: 0.875rem;
+  outline: none;
+  transition: all 0.2s;
+}
+
+.setting-control.setting-select {
+  cursor: pointer;
+}
+
+.setting-control.setting-select:focus,
+.setting-control.setting-number:focus {
+  box-shadow: var(--input-focus-ring);
+}
+
+[data-theme="modern"] .setting-control.setting-select,
+[data-theme="modern"] .setting-control.setting-number {
+  border: 2px solid #d1d5db;
+}
+
+[data-theme="modern"] .setting-control.setting-select:focus,
+[data-theme="modern"] .setting-control.setting-number:focus {
+  border-color: #3b82f6;
+}
+
+[data-theme="terminal"] .setting-control.setting-select,
+[data-theme="terminal"] .setting-control.setting-number {
+  background: #000000;
+  border: 2px solid #22c55e;
+  color: #22c55e;
+  font-family: var(--font-mono);
+}
+
+[data-theme="terminal"] .setting-control.setting-select:focus,
+[data-theme="terminal"] .setting-control.setting-number:focus {
+  border-color: #4ade80;
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.3);
+}
+
+/* Compact Toggle Switch */
+.setting-control.setting-toggle {
+  width: auto;
+  position: relative;
+  display: inline-flex;
+  height: 1.5rem;
+  width: 2.75rem;
+  align-items: center;
+  border-radius: 9999px;
+  transition: all 0.2s;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+[data-theme="modern"] .setting-control.setting-toggle {
+  background-color: #9ca3af;
+}
+
+[data-theme="terminal"] .setting-control.setting-toggle {
+  background-color: #065f46;
+  border: 2px solid #16a34a;
+}
+
+.setting-toggle-input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.setting-toggle-slider {
+  display: inline-block;
+  height: 1rem;
+  width: 1rem;
+  transform: translateX(0.25rem);
+  border-radius: 9999px;
+  background-color: white;
+  transition: transform 0.2s;
+  pointer-events: none;
+}
+
+[data-theme="modern"] .setting-toggle-slider {
+  background-color: white;
+}
+
+[data-theme="terminal"] .setting-toggle-slider {
+  background-color: #000000;
+}
+
+.setting-toggle-input:checked ~ .setting-toggle-slider {
+  transform: translateX(1.5rem);
+}
+
+[data-theme="modern"] .setting-control.setting-toggle:has(.setting-toggle-input:checked) {
+  background-color: #60a5fa;
+}
+
+[data-theme="terminal"] .setting-control.setting-toggle:has(.setting-toggle-input:checked) {
+  background-color: #22c55e;
+  border-color: #22c55e;
+}
+
+/* Settings Section Headers */
+.settings-section-header {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-secondary);
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--color-border);
+}
+
+.settings-section-header:first-child {
+  margin-top: 0;
+}
+
+[data-theme="terminal"] .settings-section-header {
+  font-family: var(--font-mono);
+  color: #16a34a;
 }
 

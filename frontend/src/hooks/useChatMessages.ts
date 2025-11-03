@@ -75,6 +75,13 @@ export const useChatMessages = (isConnected: boolean): UseChatMessagesReturn => 
     setIsLoading(true);
 
     try {
+      // Prepare model parameters from preferences
+      const modelParams = {
+        temperature: preferences.temperature,
+        topP: preferences.topP,
+        topK: preferences.topK,
+      };
+
       if (preferences.streaming) {
         // Streaming mode
         const assistantMessageId = generateMessageId(MESSAGE_ID_OFFSET.ASSISTANT);
@@ -94,6 +101,7 @@ export const useChatMessages = (isConnected: boolean): UseChatMessagesReturn => 
         await chatService.streamMessage(
           userMessage.content,
           i18n.language,
+          modelParams,
           (chunk: string) => {
             if (!abortControllerRef.current?.signal.aborted) {
               accumulatedContent += chunk;
@@ -115,6 +123,7 @@ export const useChatMessages = (isConnected: boolean): UseChatMessagesReturn => 
         const response = await chatService.sendMessage(
           userMessage.content,
           i18n.language,
+          modelParams,
           abortControllerRef.current.signal
         );
         

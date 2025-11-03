@@ -1,4 +1,5 @@
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useTranslation } from 'react-i18next';
 
 interface ModalProps {
@@ -11,9 +12,22 @@ interface ModalProps {
 
 /**
  * Generic modal component with backdrop and centered dialog
+ * Uses React Portal to render at the root level
  */
 const Modal = ({ isOpen, onClose, title, children, footer }: ModalProps) => {
   const { t } = useTranslation();
+
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
@@ -23,7 +37,7 @@ const Modal = ({ isOpen, onClose, title, children, footer }: ModalProps) => {
     }
   };
 
-  return (
+  const modalContent = (
     <>
       <div className="modal-backdrop" onClick={handleBackdropClick} />
       
@@ -47,6 +61,8 @@ const Modal = ({ isOpen, onClose, title, children, footer }: ModalProps) => {
       </div>
     </>
   );
+
+  return createPortal(modalContent, document.body);
 };
 
 export default Modal;

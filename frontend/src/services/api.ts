@@ -4,6 +4,12 @@ import { API_ENDPOINTS, API_CONFIG } from '../constants/api';
 import { createApiError } from '../utils/errors';
 import { retry } from '../utils/retry';
 
+export interface ModelParameters {
+  temperature?: number;
+  topP?: number;
+  topK?: number;
+}
+
 // In development with Docker, use relative URL (Vite proxy will handle it)
 // In production, use the full URL
 const API_BASE_URL = import.meta.env.VITE_API_URL || '';
@@ -39,11 +45,16 @@ api.interceptors.response.use(
 );
 
 export const chatService = {
-  sendMessage: async (message: string, language?: string, signal?: AbortSignal): Promise<ChatResponse> => {
+  sendMessage: async (
+    message: string, 
+    language?: string, 
+    modelParams?: ModelParameters,
+    signal?: AbortSignal
+  ): Promise<ChatResponse> => {
     try {
       const response = await api.post(
         API_ENDPOINTS.CHAT, 
-        { message, language }, 
+        { message, language, modelParams }, 
         { signal }
       );
       const data = response.data as ChatResponse;
@@ -67,7 +78,8 @@ export const chatService = {
 
   streamMessage: async (
     message: string, 
-    language?: string, 
+    language?: string,
+    modelParams?: ModelParameters,
     onChunk?: (chunk: string) => void,
     signal?: AbortSignal
   ): Promise<void> => {
@@ -79,7 +91,7 @@ export const chatService = {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ message, language }),
+        body: JSON.stringify({ message, language, modelParams }),
         signal,
       });
 

@@ -3,7 +3,8 @@
     "title": "SLM Chat Assistant",
     "titleTerminal": "> SLM_TERMINAL",
     "subtitle": "Powered by Small Language Model",
-    "subtitleTerminal": "SYSTEM v1.0.0 READY"
+    "subtitleTerminal": "SYSTEM v1.0.0 READY",
+    "settings": "Settings"
   },
   "theme": {
     "switchStyle": "Switch style",
@@ -19,10 +20,12 @@
     "disconnectedTooltip": "Backend API connection failed. Check if the server is running."
   },
   "chat": {
+    "messagesLabel": "Chat messages",
     "emptyTitle": "Start a conversation",
     "emptyTitleTerminal": "> AWAITING INPUT_",
     "emptySubtitle": "Send a message to begin chatting",
     "emptySubtitleTerminal": "Type command below...",
+    "inputLabel": "Message input",
     "inputPlaceholder": "Type your message here...",
     "inputPlaceholderTerminal": "> Enter command...",
     "sendButton": "Send",
@@ -54,5 +57,59 @@
     "switch": "Language",
     "english": "English",
     "french": "Français"
+  },
+  "settings": {
+    "title": "Settings",
+    "close": "Close settings",
+    "save": "Save",
+    "cancel": "Cancel",
+    "sections": {
+      "ui": "Interface",
+      "model": "Model Parameters"
+    },
+    "language": {
+      "label": "Language",
+      "description": "Choose your preferred language for the interface",
+      "tooltip": "Select the interface language. This affects all text in the application.",
+      "english": "English",
+      "french": "Français"
+    },
+    "theme": {
+      "label": "Theme",
+      "description": "Select the visual style of the application",
+      "tooltip": "Choose between Modern (colorful, rounded) or Terminal (retro, green-on-black) visual style.",
+      "modern": "Modern",
+      "terminal": "Terminal"
+    },
+    "streaming": {
+      "label": "Streaming",
+      "description": "Enable streaming for real-time responses or wait for complete messages",
+      "enabled": "Streaming (Real-time)",
+      "disabled": "Complete (Wait for full response)"
+    },
+    "response": {
+      "label": "Model response",
+      "description": "Choose how the model delivers responses",
+      "tooltip": "Stream: See words appear in real-time as the model generates them. Complete: Wait for the full response before displaying. Streaming provides better UX but uses more resources.",
+      "complete": "Complete",
+      "stream": "Stream"
+    },
+    "model": {
+      "temperature": {
+        "label": "Temperature",
+        "description": "Controls randomness (0=deterministic, 2=very creative)",
+        "tooltip": "Controls randomness in responses. 0.0 = deterministic and focused, 0.7 = balanced (recommended), 1.0+ = creative but less predictable. Higher values slow down generation."
+      },
+      "topP": {
+        "label": "Top P",
+        "description": "Nucleus sampling threshold (lower=more focused)",
+        "tooltip": "Limits token choices by cumulative probability. 0.9 (recommended) = consider top 90% likely tokens. Lower = more focused/repetitive, higher = more diverse. Values below 0.5 or above 0.95 can degrade quality."
+      },
+      "topK": {
+        "label": "Top K",
+        "description": "Limits token selection pool (lower=more focused)",
+        "tooltip": "Limits choices to K most likely tokens. 40 (recommended) = balanced. 1-20 = very focused/repetitive, 60-100 = more diverse. Very high values (>80) can include unlikely tokens and slow generation."
+      }
+    }
   }
 }

@@ -3,7 +3,8 @@
     "title": "Assistant de Chat SLM",
     "titleTerminal": "> TERMINAL_SLM",
     "subtitle": "Propulsé par un petit modèle de langage",
-    "subtitleTerminal": "SYSTÈME v1.0.0 PRÊT"
+    "subtitleTerminal": "SYSTÈME v1.0.0 PRÊT",
+    "settings": "Paramètres"
   },
   "theme": {
     "switchStyle": "Changer de style",
@@ -19,10 +20,12 @@
     "disconnectedTooltip": "La connexion à l'API backend a échoué. Vérifiez si le serveur fonctionne."
   },
   "chat": {
+    "messagesLabel": "Messages de chat",
     "emptyTitle": "Démarrer une conversation",
     "emptyTitleTerminal": "> EN_ATTENTE_DE_SAISIE_",
     "emptySubtitle": "Envoyez un message pour commencer à discuter",
     "emptySubtitleTerminal": "Tapez la commande ci-dessous...",
+    "inputLabel": "Saisie du message",
     "inputPlaceholder": "Tapez votre message ici...",
     "inputPlaceholderTerminal": "> Entrez la commande...",
     "sendButton": "Envoyer",
@@ -54,5 +57,59 @@
     "switch": "Langue",
     "english": "English",
     "french": "Français"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "close": "Fermer les paramètres",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "sections": {
+      "ui": "Interface",
+      "model": "Paramètres du Modèle"
+    },
+    "language": {
+      "label": "Langue",
+      "description": "Choisissez votre langue préférée pour l'interface",
+      "tooltip": "Sélectionnez la langue de l'interface. Cela affecte tout le texte de l'application.",
+      "english": "English",
+      "french": "Français"
+    },
+    "theme": {
+      "label": "Thème",
+      "description": "Sélectionnez le style visuel de l'application",
+      "tooltip": "Choisissez entre Moderne (coloré, arrondi) ou Terminal (rétro, vert sur noir).",
+      "modern": "Moderne",
+      "terminal": "Terminal"
+    },
+    "streaming": {
+      "label": "Streaming",
+      "description": "Activez le streaming pour des réponses en temps réel ou attendez les messages complets",
+      "enabled": "Streaming (Temps réel)",
+      "disabled": "Complet (Attendre la réponse complète)"
+    },
+    "response": {
+      "label": "Réponse du modèle",
+      "description": "Choisissez comment le modèle fournit les réponses",
+      "tooltip": "Stream: Voyez les mots apparaître en temps réel pendant la génération. Complète: Attendez la réponse entière avant affichage. Le streaming offre une meilleure UX mais utilise plus de ressources.",
+      "complete": "Complète",
+      "stream": "Stream"
+    },
+    "model": {
+      "temperature": {
+        "label": "Température",
+        "description": "Contrôle l'aléatoire (0=déterministe, 2=très créatif)",
+        "tooltip": "Contrôle l'aléatoire des réponses. 0.0 = déterministe et concentré, 0.7 = équilibré (recommandé), 1.0+ = créatif mais moins prévisible. Les valeurs élevées ralentissent la génération."
+      },
+      "topP": {
+        "label": "Top P",
+        "description": "Seuil d'échantillonnage du noyau (plus bas=plus ciblé)",
+        "tooltip": "Limite les choix de tokens par probabilité cumulative. 0.9 (recommandé) = considère les 90% de tokens les plus probables. Plus bas = plus concentré/répétitif, plus haut = plus diversifié. Valeurs <0.5 ou >0.95 peuvent dégrader la qualité."
+      },
+      "topK": {
+        "label": "Top K",
+        "description": "Limite le pool de sélection de jetons (plus bas=plus ciblé)",
+        "tooltip": "Limite les choix aux K tokens les plus probables. 40 (recommandé) = équilibré. 1-20 = très concentré/répétitif, 60-100 = plus diversifié. Valeurs très élevées (>80) peuvent inclure des tokens improbables et ralentir la génération."
+      }
+    }
   }
 }

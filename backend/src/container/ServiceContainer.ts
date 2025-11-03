@@ -4,6 +4,12 @@ import { IPromptFormatter } from '../interfaces/IPromptFormatter';
 import { BilingualPromptFormatter } from '../formatters/BilingualPromptFormatter';
 import { OllamaModelService } from '../services/OllamaModelService';
 
+interface ModelParameters {
+  temperature?: number;
+  topP?: number;
+  topK?: number;
+}
+
 /**
  * Dependency Injection Container
  * Manages application services and their dependencies
@@ -63,6 +69,23 @@ export class ServiceContainer {
    */
   public get promptFormatter(): IPromptFormatter {
     return this._promptFormatter;
+  }
+
+  /**
+   * Get model service with custom parameters
+   * Creates a new instance with the specified parameters
+   */
+  public getModelServiceWithParams(params: ModelParameters): IModelService {
+    return new OllamaModelService(
+      this._config.ollamaUrl,
+      this._config.ollamaModel,
+      this._promptFormatter,
+      {
+        temperature: params.temperature ?? 0.7,
+        topP: params.topP ?? 0.9,
+        topK: params.topK ?? 40,
+      }
+    );
   }
 
   /**

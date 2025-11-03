@@ -3,12 +3,17 @@ import { ServiceContainer } from '../container/ServiceContainer';
 
 const router = Router();
 const container = ServiceContainer.getInstance();
-const modelService = container.modelService;
+
+interface ModelParameters {
+  temperature?: number;
+  topP?: number;
+  topK?: number;
+}
 
 // Chat endpoint
 router.post('/chat', async (req, res) => {
   try {
-    const { message, language } = req.body;
+    const { message, language, modelParams } = req.body;
 
     if (!message || typeof message !== 'string') {
       return res.status(400).json({
@@ -19,6 +24,14 @@ router.post('/chat', async (req, res) => {
 
     // Optional language parameter for bilingual support
     const lang = language && typeof language === 'string' ? language : undefined;
+
+    // Optional model parameters
+    const params: ModelParameters | undefined = modelParams;
+
+    // Get model service with optional custom parameters
+    const modelService = params 
+      ? container.getModelServiceWithParams(params)
+      : container.modelService;
 
     // Generate response using the model
     const response = await modelService.generateResponse(message, lang);
@@ -39,7 +52,7 @@ router.post('/chat', async (req, res) => {
 // Streaming chat endpoint
 router.post('/chat/stream', async (req, res) => {
   try {
-    const { message, language } = req.body;
+    const { message, language, modelParams } = req.body;
 
     if (!message || typeof message !== 'string') {
       return res.status(400).json({
@@ -56,6 +69,14 @@ router.post('/chat/stream', async (req, res) => {
 
     // Optional language parameter for bilingual support
     const lang = language && typeof language === 'string' ? language : undefined;
+
+    // Optional model parameters
+    const params: ModelParameters | undefined = modelParams;
+
+    // Get model service with optional custom parameters
+    const modelService = params 
+      ? container.getModelServiceWithParams(params)
+      : container.modelService;
 
     // Generate streaming response
     const stream = await modelService.generateResponseStream(message, lang);
@@ -91,6 +112,7 @@ router.post('/chat/stream', async (req, res) => {
 // Model info endpoint (new!)
 router.get('/model/info', async (req, res) => {
   try {
+    const modelService = container.modelService;
     const info = await modelService.getModelInfo();
     res.json({
       data: info,

@@ -1,42 +1,26 @@
-import { useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useTheme } from '../contexts/ThemeContext';
-import { Theme } from '../types';
+import { memo } from 'react';
+import { useThemedTranslation } from '../hooks/useThemedTranslation';
 
 interface ConnectionStatusProps {
   isConnected: boolean;
 }
 
-const ConnectionStatus = ({ isConnected }: ConnectionStatusProps) => {
-  const { theme } = useTheme();
-  const { t } = useTranslation();
-  
-  // Memoize computed strings
-  const tooltipText = useMemo(
-    () => isConnected 
-      ? t('status.connectedTooltip')
-      : t('status.disconnectedTooltip'),
-    [isConnected, t]
-  );
-
-  const statusText = useMemo(
-    () => isConnected 
-      ? (theme === Theme.Terminal ? t('status.onlineTerminal') : t('status.online'))
-      : t('status.offline'),
-    [isConnected, theme, t]
-  );
+const ConnectionStatus = memo(({ isConnected }: ConnectionStatusProps) => {
+  const { tt } = useThemedTranslation();
 
   return (
     <div className="status-indicator tooltip-trigger">
       <div className={`status-dot ${isConnected ? 'connected' : 'disconnected'}`} />
       <span className="text-sm font-medium">
-        {statusText}
+        {isConnected ? tt('status.online') : tt('status.offline')}
       </span>
       <div className="tooltip">
-        {tooltipText}
+        {isConnected ? tt('status.connectedTooltip') : tt('status.disconnectedTooltip')}
       </div>
     </div>
   );
-};
+});
+
+ConnectionStatus.displayName = 'ConnectionStatus';
 
 export default ConnectionStatus;

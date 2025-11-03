@@ -6,6 +6,7 @@ export interface Message {
 }
 
 export { Theme } from './theme';
+export { Language } from './language';
 export { ApiError, ErrorType } from './errors';
 
 /**

@@ -29,6 +29,21 @@ const Modal = memo(({ isOpen, onClose, title, children, footer }: ModalProps) =>
     };
   }, [isOpen]);
 
+  // Handle ESC key to close modal
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && isOpen) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape);
+      return () => document.removeEventListener('keydown', handleEscape);
+    }
+    return undefined;
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -41,10 +56,16 @@ const Modal = memo(({ isOpen, onClose, title, children, footer }: ModalProps) =>
     <>
       <div className="modal-backdrop" onClick={handleBackdropClick} />
       
-      <div className="modal-container" onClick={handleBackdropClick}>
+      <div 
+        className="modal-container" 
+        onClick={handleBackdropClick}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modal-title"
+      >
         <div className="modal-content">
           <div className="modal-header">
-            <h2 className="text-2xl font-bold">{title}</h2>
+            <h2 id="modal-title" className="text-2xl font-bold">{title}</h2>
             <button
               onClick={onClose}
               className="modal-close-button"

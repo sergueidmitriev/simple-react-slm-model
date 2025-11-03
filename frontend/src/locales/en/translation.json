@@ -20,10 +20,12 @@
     "disconnectedTooltip": "Backend API connection failed. Check if the server is running."
   },
   "chat": {
+    "messagesLabel": "Chat messages",
     "emptyTitle": "Start a conversation",
     "emptyTitleTerminal": "> AWAITING INPUT_",
     "emptySubtitle": "Send a message to begin chatting",
     "emptySubtitleTerminal": "Type command below...",
+    "inputLabel": "Message input",
     "inputPlaceholder": "Type your message here...",
     "inputPlaceholderTerminal": "> Enter command...",
     "sendButton": "Send",

@@ -20,10 +20,12 @@
     "disconnectedTooltip": "La connexion à l'API backend a échoué. Vérifiez si le serveur fonctionne."
   },
   "chat": {
+    "messagesLabel": "Messages de chat",
     "emptyTitle": "Démarrer une conversation",
     "emptyTitleTerminal": "> EN_ATTENTE_DE_SAISIE_",
     "emptySubtitle": "Envoyez un message pour commencer à discuter",
     "emptySubtitleTerminal": "Tapez la commande ci-dessous...",
+    "inputLabel": "Saisie du message",
     "inputPlaceholder": "Tapez votre message ici...",
     "inputPlaceholderTerminal": "> Entrez la commande...",
     "sendButton": "Envoyer",

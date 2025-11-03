@@ -62,6 +62,16 @@ const SettingRow = memo((props: SettingRowProps) => {
     setShowTooltip(true);
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      setShowTooltip(!showTooltip);
+    }
+    if (e.key === 'Escape' && showTooltip) {
+      setShowTooltip(false);
+    }
+  };
+
   const renderControl = () => {
     switch (type) {
       case 'select': {
@@ -132,13 +142,19 @@ const SettingRow = memo((props: SettingRowProps) => {
               className="setting-info-icon"
               onMouseEnter={handleMouseEnter}
               onMouseLeave={() => setShowTooltip(false)}
+              onKeyDown={handleKeyDown}
               onClick={(e) => e.preventDefault()}
               type="button"
+              aria-label="More information"
+              aria-expanded={showTooltip}
+              aria-describedby={showTooltip ? `tooltip-${label.replace(/\s+/g, '-')}` : undefined}
             >
               ⓘ
             </button>
             {showTooltip && (
               <div 
+                id={`tooltip-${label.replace(/\s+/g, '-')}`}
+                role="tooltip"
                 className="setting-tooltip setting-tooltip-fixed"
                 style={{
                   top: `${tooltipPosition.top}px`,

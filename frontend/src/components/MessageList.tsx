@@ -22,10 +22,15 @@ const MessageList = ({ messages, isLoading }: MessageListProps) => {
   }, [messages]);
 
   return (
-    <div className="message-list">
+    <div 
+      className="message-list" 
+      role="log" 
+      aria-live="polite" 
+      aria-label={tt('chat.messagesLabel')}
+    >
       {messages.length === 0 ? (
-        <div className="empty-state">
-          <div className="empty-state-icon">
+        <div className="empty-state" role="status">
+          <div className="empty-state-icon" aria-hidden="true">
             <ChatIcon />
           </div>
           <h3 className="empty-state-title">
@@ -42,9 +47,9 @@ const MessageList = ({ messages, isLoading }: MessageListProps) => {
       )}
       
       {isLoading && (
-        <div className="loading-indicator">
+        <div className="loading-indicator" role="status" aria-live="polite" aria-label={tt('chat.aiTyping')}>
           <div>
-            <div className="loading-dots">
+            <div className="loading-dots" aria-hidden="true">
               <div className="loading-dot"></div>
               <div className="loading-dot"></div>
               <div className="loading-dot"></div>

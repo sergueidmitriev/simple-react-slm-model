@@ -1,10 +1,11 @@
-import { ReactNode } from 'react';
+import { ReactNode, useState, useRef } from 'react';
 
 type SettingControlType = 'select' | 'number' | 'toggle' | 'custom';
 
 interface BaseSettingRowProps {
   label: string;
   type: SettingControlType;
+  tooltip?: string;
 }
 
 interface SelectSettingRowProps extends BaseSettingRowProps {
@@ -45,7 +46,21 @@ type SettingRowProps =
  * Renders a two-column layout: Label | Control
  */
 const SettingRow = (props: SettingRowProps) => {
-  const { label, type } = props;
+  const { label, type, tooltip } = props;
+  const [showTooltip, setShowTooltip] = useState(false);
+  const [tooltipPosition, setTooltipPosition] = useState({ top: 0, left: 0 });
+  const iconRef = useRef<HTMLButtonElement>(null);
+
+  const handleMouseEnter = () => {
+    if (iconRef.current) {
+      const rect = iconRef.current.getBoundingClientRect();
+      setTooltipPosition({
+        top: rect.top + rect.height / 2,
+        left: rect.right + 8,
+      });
+    }
+    setShowTooltip(true);
+  };
 
   const renderControl = () => {
     switch (type) {
@@ -108,7 +123,34 @@ const SettingRow = (props: SettingRowProps) => {
 
   return (
     <div className="setting-row">
-      <div className="setting-row-label">{label}</div>
+      <div className="setting-row-label">
+        {label}
+        {tooltip && (
+          <>
+            <button
+              ref={iconRef}
+              className="setting-info-icon"
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={() => setShowTooltip(false)}
+              onClick={(e) => e.preventDefault()}
+              type="button"
+            >
+              ⓘ
+            </button>
+            {showTooltip && (
+              <div 
+                className="setting-tooltip setting-tooltip-fixed"
+                style={{
+                  top: `${tooltipPosition.top}px`,
+                  left: `${tooltipPosition.left}px`,
+                }}
+              >
+                {tooltip}
+              </div>
+            )}
+          </>
+        )}
+      </div>
       <div className="setting-row-control">{renderControl()}</div>
     </div>
   );

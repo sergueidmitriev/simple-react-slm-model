@@ -39,15 +39,41 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
   }, [isOpen, preferences]);
 
   const handleSave = () => {
+    // Validate and clamp numeric values
+    const validatedTemperature = Math.max(0, Math.min(2, localTemperature));
+    const validatedTopP = Math.max(0.1, Math.min(1, localTopP));
+    const validatedTopK = Math.max(1, Math.min(100, Math.round(localTopK)));
+
     updatePreferences({
       language: localLanguage,
       theme: localTheme,
       streaming: localStreaming,
-      temperature: localTemperature,
-      topP: localTopP,
-      topK: localTopK,
+      temperature: validatedTemperature,
+      topP: validatedTopP,
+      topK: validatedTopK,
     });
     onClose();
+  };
+
+  const handleTemperatureChange = (value: number) => {
+    // Clamp between 0 and 2
+    if (!isNaN(value)) {
+      setLocalTemperature(Math.max(0, Math.min(2, value)));
+    }
+  };
+
+  const handleTopPChange = (value: number) => {
+    // Clamp between 0.1 and 1 (avoid 0 which breaks sampling)
+    if (!isNaN(value)) {
+      setLocalTopP(Math.max(0.1, Math.min(1, value)));
+    }
+  };
+
+  const handleTopKChange = (value: number) => {
+    // Clamp between 1 and 100, round to integer
+    if (!isNaN(value)) {
+      setLocalTopK(Math.max(1, Math.min(100, Math.round(value))));
+    }
   };
 
   const handleCancel = () => {
@@ -84,6 +110,7 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
         <SettingRow
           type="select"
           label={t('settings.language.label')}
+          tooltip={t('settings.language.tooltip')}
           value={localLanguage}
           onChange={(value) => setLocalLanguage(value as Language)}
           options={[
@@ -95,6 +122,7 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
         <SettingRow
           type="select"
           label={t('settings.theme.label')}
+          tooltip={t('settings.theme.tooltip')}
           value={localTheme}
           onChange={(value) => setLocalTheme(value as Theme)}
           options={[
@@ -104,10 +132,15 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
         />
         
         <SettingRow
-          type="toggle"
-          label={t('settings.streaming.label')}
-          value={localStreaming}
-          onChange={setLocalStreaming}
+          type="select"
+          label={t('settings.response.label')}
+          tooltip={t('settings.response.tooltip')}
+          value={localStreaming ? 'stream' : 'complete'}
+          onChange={(value) => setLocalStreaming(value === 'stream')}
+          options={[
+            { value: 'complete', label: t('settings.response.complete') },
+            { value: 'stream', label: t('settings.response.stream') },
+          ]}
         />
 
         {/* Model Parameters Section */}
@@ -116,8 +149,9 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
         <SettingRow
           type="number"
           label={t('settings.model.temperature.label')}
+          tooltip={t('settings.model.temperature.tooltip')}
           value={localTemperature}
-          onChange={setLocalTemperature}
+          onChange={handleTemperatureChange}
           min={0}
           max={2}
           step={0.1}
@@ -126,9 +160,10 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
         <SettingRow
           type="number"
           label={t('settings.model.topP.label')}
+          tooltip={t('settings.model.topP.tooltip')}
           value={localTopP}
-          onChange={setLocalTopP}
-          min={0}
+          onChange={handleTopPChange}
+          min={0.1}
           max={1}
           step={0.05}
         />
@@ -136,8 +171,9 @@ const SettingsModal = ({ isOpen, onClose }: SettingsModalProps) => {
         <SettingRow
           type="number"
           label={t('settings.model.topK.label')}
+          tooltip={t('settings.model.topK.tooltip')}
           value={localTopK}
-          onChange={setLocalTopK}
+          onChange={handleTopKChange}
           min={1}
           max={100}
           step={1}

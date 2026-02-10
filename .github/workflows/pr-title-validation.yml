@@ -20,10 +20,10 @@ jobs:
             chore
             fix
           requireScope: true
-          # Scope must match the pattern ABC-NNN (uppercase letters followed by hyphen and numbers)
-          scopePattern: '^[A-Z]+-[0-9]+$'
-          # Subject (title) is required
-          subjectPattern: ^.+$
+          # Scope must match the pattern ABC-NNN (2+ uppercase letters followed by hyphen and 1+ numbers)
+          scopePattern: '^[A-Z]{2,}-[0-9]+$'
+          # Subject (title) is required and must start with non-whitespace
+          subjectPattern: '^\S.*$'
           # Customize error messages
           subjectPatternError: |
             The subject "{subject}" found in the pull request title "{title}"

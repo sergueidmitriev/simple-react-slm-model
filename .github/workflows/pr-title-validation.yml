@@ -1,0 +1,33 @@
+name: PR Title Validation
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize, reopened]
+
+jobs:
+  validate-pr-title:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    steps:
+      - name: Validate PR Title
+        uses: amannn/action-semantic-pull-request@0723387faaf9b38adef4775cd42cfd5155ed6017 # v5.5.3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          # Configure the action to validate against the pattern:
+          # feat(ABC-NNN): title or chore(ABC-NNN): title or fix(ABC-NNN): title
+          types: |
+            feat
+            chore
+            fix
+          requireScope: true
+          # Scope must match the pattern ABC-NNN (2+ uppercase letters followed by hyphen and 1+ numbers)
+          scopePattern: '^[A-Z]{2,}-[0-9]+$'
+          # Subject (title) is required and must be at least 3 characters with meaningful content
+          subjectPattern: '^\S.{2,}$'
+          # Customize error messages
+          subjectPatternError: |
+            The subject "{subject}" found in the pull request title "{title}"
+            didn't match the configured pattern. Please ensure that the subject
+            follows the expected format.
